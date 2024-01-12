@@ -18,11 +18,11 @@ interface ItemDao {
     fun getItemById(itemId: Int): Item?
 
     @Query("SELECT * FROM items WHERE collectionId = :collectionId ORDER BY itemId ASC")
-    fun getItemsByCollection(collectionId: Collection): List<Item>
+    fun getItemsByCollection(collectionId: Int): List<Item>
 
     @Update(onConflict = OnConflictStrategy.ABORT)
-    fun update(item: Item): Long
+    fun update(item: Item): Int
 
     @Delete
-    fun delete(itemId: Int)
+    fun delete(itemId: Item)
 }

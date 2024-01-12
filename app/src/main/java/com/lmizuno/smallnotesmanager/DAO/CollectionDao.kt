@@ -13,11 +13,11 @@ interface CollectionDao {
     fun insert(collection: Collection): Long
 
     @Query("SELECT * FROM collections WHERE collectionId = :collectionId")
-    fun getCollectionById(collectionId: Collection): Collection?
+    fun getCollectionById(collectionId: Int): Collection?
 
     @Query("SELECT * FROM collections")
     fun getAll(): List<Collection>
 
     @Query("SELECT * FROM items WHERE collectionId = :collectionId ORDER BY itemId ASC")
-    fun getCollectionItems(collectionId: Collection): List<Item>
+    fun getCollectionItems(collectionId: Int): List<Item>
 }
