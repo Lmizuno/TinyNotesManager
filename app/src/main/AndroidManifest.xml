@@ -13,9 +13,15 @@
         android:theme="@style/Theme.SmallNotesManager"
         tools:targetApi="31">
         <activity
-            android:name=".NewCollectionActivity"
-            android:theme="@style/Theme.SmallNotesManager.NoActionBar"
+            android:name=".NewItemActivity"
             android:exported="false" />
+        <activity
+            android:name=".Ui.CollectionViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NewCollectionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmallNotesManager.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

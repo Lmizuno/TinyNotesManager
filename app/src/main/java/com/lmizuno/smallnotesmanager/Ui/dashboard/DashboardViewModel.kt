@@ -1,4 +1,4 @@
-package com.lmizuno.smallnotesmanager.ui.dashboard
+package com.lmizuno.smallnotesmanager.Ui.dashboard
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

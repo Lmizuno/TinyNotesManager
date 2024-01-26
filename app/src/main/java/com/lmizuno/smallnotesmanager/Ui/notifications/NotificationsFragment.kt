@@ -1,4 +1,4 @@
-package com.lmizuno.smallnotesmanager.ui.notifications
+package com.lmizuno.smallnotesmanager.Ui.notifications
 
 import android.os.Bundle
 import android.view.LayoutInflater

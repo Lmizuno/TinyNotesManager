@@ -1,4 +1,4 @@
-package com.lmizuno.smallnotesmanager.ui.dashboard
+package com.lmizuno.smallnotesmanager.Ui.dashboard
 
 import android.os.Bundle
 import android.view.LayoutInflater

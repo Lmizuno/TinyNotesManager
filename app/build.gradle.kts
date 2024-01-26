@@ -41,6 +41,8 @@ android {
 
 dependencies {
 
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
     // Developer Defined
     val roomVersion = "2.6.1"
 
