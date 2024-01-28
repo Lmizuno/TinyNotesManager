@@ -8,19 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lmizuno.smallnotesmanager.Adapters.CollectionListAdapter
 import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
 import com.lmizuno.smallnotesmanager.Listeners.CollectionsClickListener
-import com.lmizuno.smallnotesmanager.Listeners.FragmentChangeListener
 import com.lmizuno.smallnotesmanager.Models.Collection
 import com.lmizuno.smallnotesmanager.NewCollectionActivity
 import com.lmizuno.smallnotesmanager.R
 import com.lmizuno.smallnotesmanager.databinding.FragmentHomeBinding
 
-class HomeFragment : Fragment(), FragmentChangeListener {
+class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
 
     private val binding get() = _binding!!
@@ -76,12 +74,4 @@ class HomeFragment : Fragment(), FragmentChangeListener {
                 updateRecycler(db.collectionDao().getAll())
             }
         }
-
-    override fun replaceFragment(fragment: Fragment) {
-        activity?.supportFragmentManager?.commit {
-            replace(R.id.nav_host_fragment_activity_main, fragment)
-            setReorderingAllowed(true)
-            addToBackStack(fragment.toString()) // Name can be null
-        }
-    }
 }

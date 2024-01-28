@@ -22,7 +22,7 @@ class CollectionsClickListener(private val currentFragment: Fragment) : Collecti
         fragment.arguments = args
 
         (currentFragment as? HomeFragment)?.activity?.supportFragmentManager?.commit {
-            replace(R.id.nav_host_fragment_activity_main ,fragment)
+            replace(R.id.nav_host_fragment_activity_main, fragment)
             setReorderingAllowed(true)
             addToBackStack(fragment.toString())
         }

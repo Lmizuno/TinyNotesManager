@@ -1,11 +1,13 @@
 package com.lmizuno.smallnotesmanager.Ui.collection
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lmizuno.smallnotesmanager.Adapters.ItemListAdapter
@@ -13,8 +15,10 @@ import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
 import com.lmizuno.smallnotesmanager.Models.Collection
 import com.lmizuno.smallnotesmanager.Models.Item
 import com.lmizuno.smallnotesmanager.databinding.FragmentCollectionViewBinding
-import com.lmizuno.smallnotesmanager.Listeners.ItemClickListener
+import com.lmizuno.smallnotesmanager.Listeners.ItemsClickListener
 import com.lmizuno.smallnotesmanager.MainActivity
+import com.lmizuno.smallnotesmanager.NewCollectionActivity
+import com.lmizuno.smallnotesmanager.NewItemActivity
 
 class CollectionViewFragment : Fragment() {
     private var _binding: FragmentCollectionViewBinding? = null
@@ -23,7 +27,7 @@ class CollectionViewFragment : Fragment() {
     private lateinit var db: AppDatabase
     private lateinit var recyclerView: RecyclerView
     private lateinit var activity: MainActivity
-
+    private lateinit var currentCollection: Collection
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,41 +43,47 @@ class CollectionViewFragment : Fragment() {
 
         db = AppDatabase.getInstance(requireContext())
 
-        val collection = arguments?.getSerializable("collection", Collection::class.java)
+        currentCollection = arguments?.getSerializable("collection", Collection::class.java)!!
 
-        if (collection != null) {
-            val itemList: List<Item> =
-                db.collectionDao().getCollectionItems(collection.collectionId)
+        val itemList: List<Item> =
+            db.collectionDao().getCollectionItems(currentCollection.collectionId)
 
-            updateRecycler(itemList)
-        }
+        updateRecycler(itemList)
 
         binding.fabNewItem.setOnClickListener {
+            val intent = Intent(requireContext(), NewItemActivity::class.java)
+            newItemActivityResultLauncher.launch(intent)
         }
 
         return root
+    }
+
+    override fun onDestroyView() {
+        activity.toggleNavBar(true)
+        _binding = null
+        super.onDestroyView()
     }
 
     private fun updateRecycler(items: List<Item>) {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        val adapter = ItemListAdapter(items, ItemsClickListener)
+        val adapter = ItemListAdapter(items, ItemsClickListener())
         recyclerView.adapter = adapter
     }
 
-    companion object ItemsClickListener : ItemClickListener {
-        override fun onClick(item: Item) {
-            TODO("Not yet implemented")
-        }
+    private val newItemActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
 
-        override fun onLongClick(item: Item, cardView: CardView) {
-            TODO("Not yet implemented")
-        }
-    }
+                val item: Item? =
+                    data?.getSerializableExtra("item", Item::class.java)
+                db.itemDao().insert(item!!)
 
-    override fun onDestroyView() {
-        activity.toggleNavBar(true)
-        super.onDestroyView()
-    }
+                updateRecycler(
+                    db.collectionDao().getCollectionItems(currentCollection.collectionId)
+                )
+            }
+        }
 }

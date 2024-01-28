@@ -29,11 +29,6 @@ class ItemListAdapter(
         holder.itemContainer.setOnClickListener{
             listener.onClick(currentItem)
         }
-
-        holder.itemContainer.setOnLongClickListener{
-            listener.onLongClick(currentItem, holder.itemContainer)
-            return@setOnLongClickListener false
-        }
     }
 
     override fun getItemCount(): Int {
