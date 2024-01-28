@@ -76,6 +76,10 @@ class CollectionViewFragment : Fragment() {
 
                 val item: Item? =
                     data?.getSerializableExtra("item", Item::class.java)
+
+                if (item != null) {
+                    item.collectionId = currentCollection.collectionId
+                }
                 db.itemDao().insert(item!!)
 
                 updateRecycler(

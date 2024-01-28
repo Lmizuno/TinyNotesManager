@@ -6,7 +6,7 @@ import java.io.Serializable
 @Entity(tableName = "collections")
 data class Collection(
     @PrimaryKey(autoGenerate = true)
-    val collectionId: Int = 0,
-    val name: String?,
-    val description: String?
+    var collectionId: Int = 0,
+    var name: String?,
+    var description: String?
 ):Serializable

@@ -15,9 +15,9 @@ import java.io.Serializable
     )])
 data class Item(
     @PrimaryKey(autoGenerate = true)
-    val itemId: Int,
+    var itemId: Int,
     @ColumnInfo(index = true)
-    val collectionId: Int,
-    val title: String?,
-    val content: String?
+    var collectionId: Int,
+    var title: String?,
+    var content: String?
 ): Serializable

@@ -11,7 +11,6 @@ import com.lmizuno.smallnotesmanager.Models.Collection
 class NewCollectionActivity : AppCompatActivity() {
     private lateinit var description: TextInputEditText
     private lateinit var name: TextInputEditText
-
     private lateinit var add: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
