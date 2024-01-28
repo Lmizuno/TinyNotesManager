@@ -17,7 +17,6 @@ import com.lmizuno.smallnotesmanager.Models.Item
 import com.lmizuno.smallnotesmanager.databinding.FragmentCollectionViewBinding
 import com.lmizuno.smallnotesmanager.Listeners.ItemsClickListener
 import com.lmizuno.smallnotesmanager.MainActivity
-import com.lmizuno.smallnotesmanager.NewCollectionActivity
 import com.lmizuno.smallnotesmanager.NewItemActivity
 
 class CollectionViewFragment : Fragment() {
@@ -37,7 +36,6 @@ class CollectionViewFragment : Fragment() {
         val root: View = binding.root
 
         activity = requireActivity() as MainActivity
-        activity.toggleNavBar(false)
 
         recyclerView = binding.recyclerCollection
 
@@ -59,7 +57,6 @@ class CollectionViewFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        activity.toggleNavBar(true)
         _binding = null
         super.onDestroyView()
     }

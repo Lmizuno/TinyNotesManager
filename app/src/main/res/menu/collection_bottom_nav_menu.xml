@@ -6,7 +6,7 @@
     >
     <item
         android:id="@+id/playSlideButton"
-        android:icon="@android:drawable/ic_media_play"
+        android:icon="@drawable/baseline_arrow_forward_ios_24"
         android:title="Play"
         app:showAsAction="ifRoom" />
 
