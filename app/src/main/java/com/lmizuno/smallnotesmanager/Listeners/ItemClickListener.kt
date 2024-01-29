@@ -2,6 +2,7 @@ package com.lmizuno.smallnotesmanager.Listeners
 
 import android.content.Intent
 import androidx.fragment.app.Fragment
+import com.lmizuno.smallnotesmanager.CollectionPresentationActivity
 import com.lmizuno.smallnotesmanager.EditorItemActivity
 import com.lmizuno.smallnotesmanager.Models.Item
 import com.lmizuno.smallnotesmanager.Ui.collection.CollectionViewFragment
@@ -16,15 +17,19 @@ class ItemsClickListener(private val currentFragment: Fragment) : ItemClickListe
 
         if (colViewFrag != null) {
             if (colViewFrag.editorToggle) {
+                //Edit mode
                 val intent =
                     Intent(currentFragment.requireContext(), EditorItemActivity::class.java)
                 intent.putExtra("item", item)
-                (currentFragment as? CollectionViewFragment)?.editItemActivityResultLauncher?.launch(
-                    intent
-                )
+                colViewFrag.editItemActivityResultLauncher.launch(intent)
             } else {
                 //Presentation mode
-                //val intent = Intent(currentFragment.requireContext(), EditorItemActivity::class.java)
+                val intent = Intent(
+                    currentFragment.requireContext(),
+                    CollectionPresentationActivity::class.java
+                )
+                intent.putExtra("item", item)
+                colViewFrag.startActivity(intent)
             }
         }
     }
