@@ -43,14 +43,19 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:hint="@string/content"
-            android:inputType="text">
+            android:inputType="textMultiLine">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/contentInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:lines="20"
-                />
+                android:gravity="top|start"
+                android:inputType="textMultiLine"
+                android:lines="10"
+                android:maxLines="20"
+                android:minLines="10"
+                android:scrollbars="vertical" />
+
         </com.google.android.material.textfield.TextInputLayout>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </RelativeLayout>

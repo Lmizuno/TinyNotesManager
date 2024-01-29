@@ -45,10 +45,13 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     // Developer Defined
     val roomVersion = "2.6.1"
+    val markwonVersion = "4.6.2"
 
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
+    implementation("io.noties.markwon:core:$markwonVersion")
+    implementation("io.noties.markwon:editor:$markwonVersion")
 
     // Default
     implementation("androidx.core:core-ktx:1.12.0")
