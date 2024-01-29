@@ -1,13 +1,19 @@
 package com.lmizuno.smallnotesmanager.Listeners
 
+import android.content.Intent
+import androidx.fragment.app.Fragment
+import com.lmizuno.smallnotesmanager.EditorItemActivity
 import com.lmizuno.smallnotesmanager.Models.Item
+import com.lmizuno.smallnotesmanager.Ui.collection.CollectionViewFragment
 
 interface ItemClickListener {
     fun onClick(item: Item)
 }
 
-class ItemsClickListener() : ItemClickListener {
+class ItemsClickListener(private val currentFragment: Fragment) : ItemClickListener {
     override fun onClick(item: Item) {
-        TODO("Not yet implemented")
+        val intent = Intent(currentFragment.requireContext(), EditorItemActivity::class.java)
+        intent.putExtra("item", item)
+        (currentFragment as? CollectionViewFragment)?.editItemActivityResultLauncher?.launch(intent)
     }
 }

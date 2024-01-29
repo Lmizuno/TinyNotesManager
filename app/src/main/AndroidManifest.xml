@@ -13,7 +13,7 @@
         android:theme="@style/Theme.SmallNotesManager"
         >
         <activity
-            android:name=".NewItemActivity"
+            android:name=".EditorItemActivity"
             android:exported="false"
             android:theme="@style/Theme.SmallNotesManager.NoActionBar"/>
         <activity
