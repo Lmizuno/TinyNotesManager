@@ -28,6 +28,7 @@ class CollectionViewFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var activity: MainActivity
     private lateinit var currentCollection: Collection
+    var editorToggle: Boolean = false
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,20 +51,35 @@ class CollectionViewFragment : Fragment() {
         updateRecycler(itemList)
 
         binding.fabNewItem.setOnClickListener {
-            val intent = Intent(requireContext(), EditorItemActivity::class.java)
-            newItemActivityResultLauncher.launch(intent)
+            if (!editorToggle) {
+                binding.fabNewItem.setImageResource(R.drawable.baseline_app_settings_alt_24)
+                binding.fabNewItem.backgroundTintList =
+                    resources.getColorStateList(R.color.yellow_pastel, requireContext().theme)
+
+                editorToggle = !editorToggle
+            } else {
+                binding.fabNewItem.setImageResource(R.drawable.baseline_app_shortcut_24)
+
+                binding.fabNewItem.backgroundTintList =
+                    resources.getColorStateList(R.color.teal_200, requireContext().theme)
+                editorToggle = !editorToggle
+            }
         }
 
         binding.bottomAppBar.setOnMenuItemClickListener{
             when (it.itemId) {
-                R.id.playSlideButton -> {
-                    //TODO: play in according to the way each item is setup
+                R.id.addItemButton -> {
+                    val intent = Intent(requireContext(), EditorItemActivity::class.java)
+                    newItemActivityResultLauncher.launch(intent)
+
                     true
                 }
+
                 R.id.shareCollection -> {
                     //TODO: create a way to share as a unique file to be imported later
                     true
                 }
+
                 R.id.downloadCollection -> {
                     //TODO: create a way to download as PDF
                     true

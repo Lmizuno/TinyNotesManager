@@ -20,8 +20,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/fab_item"
+        app:backgroundTint="@color/teal_200"
+        app:fabSize="mini"
         app:layout_anchor="@id/bottomAppBar"
-        app:srcCompat="@drawable/baseline_add_24_white"
+        app:srcCompat="@drawable/baseline_app_shortcut_24"
         tools:ignore="ImageContrastCheck" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
@@ -29,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:fabAlignmentMode="end"
+        app:fabAlignmentMode="center"
         app:menu="@menu/collection_bottom_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

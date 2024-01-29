@@ -3,12 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="HardcodedText"
-
     >
     <item
-        android:id="@+id/playSlideButton"
-        android:icon="@drawable/baseline_arrow_forward_ios_24"
-        android:title="Play"
+        android:id="@+id/addItemButton"
+        android:icon="@drawable/baseline_add_circle_outline_24"
+        android:title="Add"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/shareCollection"

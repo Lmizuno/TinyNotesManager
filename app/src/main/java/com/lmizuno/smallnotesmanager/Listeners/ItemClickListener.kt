@@ -12,8 +12,20 @@ interface ItemClickListener {
 
 class ItemsClickListener(private val currentFragment: Fragment) : ItemClickListener {
     override fun onClick(item: Item) {
-        val intent = Intent(currentFragment.requireContext(), EditorItemActivity::class.java)
-        intent.putExtra("item", item)
-        (currentFragment as? CollectionViewFragment)?.editItemActivityResultLauncher?.launch(intent)
+        val colViewFrag = (currentFragment as? CollectionViewFragment)
+
+        if (colViewFrag != null) {
+            if (colViewFrag.editorToggle) {
+                val intent =
+                    Intent(currentFragment.requireContext(), EditorItemActivity::class.java)
+                intent.putExtra("item", item)
+                (currentFragment as? CollectionViewFragment)?.editItemActivityResultLauncher?.launch(
+                    intent
+                )
+            } else {
+                //Presentation mode
+                //val intent = Intent(currentFragment.requireContext(), EditorItemActivity::class.java)
+            }
+        }
     }
 }
