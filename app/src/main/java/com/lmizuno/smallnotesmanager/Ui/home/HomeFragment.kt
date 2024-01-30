@@ -58,13 +58,8 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        Toast.makeText(requireContext(), "home onResume", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Refreshing", Toast.LENGTH_SHORT).show()
         updateRecycler(db.collectionDao().getAll())
-    }
-
-    override fun onPause() {
-        Toast.makeText(requireContext(), "home onPause", Toast.LENGTH_SHORT).show()
-        super.onPause()
     }
 
     private fun updateRecycler(collections: List<Collection>) {

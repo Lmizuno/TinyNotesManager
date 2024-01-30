@@ -125,9 +125,7 @@ class CollectionViewFragment : Fragment() {
                         ).show()
                         db.collectionDao().deleteCollectionAndItems(currentCollection)
 
-                        //TODO: find a way to end this fragment and call the previous fragment running through onResume lifecycle
-                        //activity.supportFragmentManager.popBackStack()
-                        //activity.supportFragmentManager.popBackStack(this.toString(), 1)
+                        activity.supportFragmentManager.popBackStack()
                     }, {
                         // Cancel
                     }).show(activity.supportFragmentManager, "DELETE_DIALOG")
