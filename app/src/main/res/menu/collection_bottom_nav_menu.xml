@@ -19,4 +19,9 @@
         android:icon="@drawable/baseline_arrow_circle_down_24"
         android:title="Download"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/deleteCollection"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Delete"
+        app:showAsAction="ifRoom" />
 </menu>

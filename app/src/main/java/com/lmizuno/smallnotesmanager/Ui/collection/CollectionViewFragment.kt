@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -23,6 +24,7 @@ import com.lmizuno.smallnotesmanager.Models.Item
 import com.lmizuno.smallnotesmanager.R
 import com.lmizuno.smallnotesmanager.databinding.FragmentCollectionViewBinding
 import com.lmizuno.smallnotesmanager.Scripts.Sharing
+import com.lmizuno.smallnotesmanager.Ui.dialogs.DeleteDialogFragment
 import java.io.File
 
 class CollectionViewFragment : Fragment() {
@@ -112,13 +114,33 @@ class CollectionViewFragment : Fragment() {
                     true
                 }
 
+                R.id.deleteCollection -> {
+                    //Open Dialog
+                    DeleteDialogFragment("Do you want to delete ${currentCollection.name}?", {
+                        // Delete
+                        Toast.makeText(
+                            requireContext(),
+                            "Deleting ${currentCollection.name}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        db.collectionDao().deleteCollectionAndItems(currentCollection)
+
+                        //TODO: find a way to end this fragment and call the previous fragment running through onResume lifecycle
+                        //activity.supportFragmentManager.popBackStack()
+                        //activity.supportFragmentManager.popBackStack(this.toString(), 1)
+                    }, {
+                        // Cancel
+                    }).show(activity.supportFragmentManager, "DELETE_DIALOG")
+
+                    true
+                }
+
                 else -> false
             }
         }
 
         return root
     }
-
 
     override fun onDestroyView() {
         _binding = null

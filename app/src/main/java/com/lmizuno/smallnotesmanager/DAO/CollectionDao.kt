@@ -1,6 +1,7 @@
 package com.lmizuno.smallnotesmanager.DAO
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -20,4 +21,7 @@ interface CollectionDao {
 
     @Query("SELECT * FROM items WHERE collectionId = :collectionId ORDER BY itemId ASC")
     fun getCollectionItems(collectionId: Int): List<Item>
+
+    @Delete
+    fun deleteCollectionAndItems(collection: Collection)
 }

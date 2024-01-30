@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,6 +55,18 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        Toast.makeText(requireContext(), "home onResume", Toast.LENGTH_SHORT).show()
+        updateRecycler(db.collectionDao().getAll())
+    }
+
+    override fun onPause() {
+        Toast.makeText(requireContext(), "home onPause", Toast.LENGTH_SHORT).show()
+        super.onPause()
+    }
+
     private fun updateRecycler(collections: List<Collection>) {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager =
@@ -71,7 +84,7 @@ class HomeFragment : Fragment() {
                     data?.getSerializableExtra("collection", Collection::class.java)
                 db.collectionDao().insert(coll!!)
 
-                updateRecycler(db.collectionDao().getAll())
+                //List will be updated by onResume
             }
         }
 }

@@ -21,7 +21,7 @@ class CollectionsClickListener(private val currentFragment: Fragment) : Collecti
         args.putSerializable("collection", collection)
         fragment.arguments = args
 
-        (currentFragment as? HomeFragment)?.activity?.supportFragmentManager?.commit {
+        (currentFragment as HomeFragment).activity?.supportFragmentManager?.commit {
             replace(R.id.nav_host_fragment_activity_main, fragment)
             setReorderingAllowed(true)
             addToBackStack(fragment.toString())
