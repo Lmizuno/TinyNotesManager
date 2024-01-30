@@ -52,11 +52,6 @@ class CollectionViewFragment : Fragment() {
 
         currentCollection = arguments?.getSerializable("collection", Collection::class.java)!!
 
-        val itemList: List<Item> =
-            db.collectionDao().getCollectionItems(currentCollection.collectionId)
-
-        updateRecycler(itemList)
-
         binding.fabNewItem.setOnClickListener {
             if (!editorToggle) {
                 binding.fabNewItem.setImageResource(R.drawable.baseline_app_settings_alt_24)
@@ -77,7 +72,7 @@ class CollectionViewFragment : Fragment() {
             when (it.itemId) {
                 R.id.addItemButton -> {
                     val intent = Intent(requireContext(), EditorItemActivity::class.java)
-                    newItemActivityResultLauncher.launch(intent)
+                    editorItemActivityResultLauncher.launch(intent)
 
                     true
                 }
@@ -140,6 +135,11 @@ class CollectionViewFragment : Fragment() {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateRecycler(db.collectionDao().getCollectionItems(currentCollection.collectionId))
+    }
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
@@ -153,7 +153,7 @@ class CollectionViewFragment : Fragment() {
         recyclerView.adapter = adapter
     }
 
-    val newItemActivityResultLauncher =
+    val editorItemActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data: Intent? = result.data
@@ -161,30 +161,15 @@ class CollectionViewFragment : Fragment() {
                 val item: Item? =
                     data?.getSerializableExtra("item", Item::class.java)
 
-                if (item != null) {
-                    item.collectionId = currentCollection.collectionId
+                if (editorToggle) {
+                    db.itemDao().update(item!!)
+                } else {
+                    if (item != null) {
+                        item.collectionId = currentCollection.collectionId
+                    }
+
+                    db.itemDao().insert(item!!)
                 }
-                db.itemDao().insert(item!!)
-
-                updateRecycler(
-                    db.collectionDao().getCollectionItems(currentCollection.collectionId)
-                )
-            }
-        }
-
-    val editItemActivityResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent? = result.data
-
-                val item: Item? =
-                    data?.getSerializableExtra("item", Item::class.java)
-
-                db.itemDao().update(item!!)
-
-                updateRecycler(
-                    db.collectionDao().getCollectionItems(currentCollection.collectionId)
-                )
             }
         }
 }
