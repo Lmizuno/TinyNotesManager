@@ -18,6 +18,6 @@ data class Item(
     var itemId: Int,
     @ColumnInfo(index = true)
     var collectionId: Int,
-    var title: String?,
-    var content: String?
+    var title: String,
+    var content: String
 ): Serializable

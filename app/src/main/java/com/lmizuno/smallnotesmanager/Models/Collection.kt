@@ -7,6 +7,6 @@ import java.io.Serializable
 data class Collection(
     @PrimaryKey(autoGenerate = true)
     var collectionId: Int = 0,
-    var name: String?,
-    var description: String?
+    var name: String,
+    var description: String
 ):Serializable
