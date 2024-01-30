@@ -27,7 +27,7 @@ class CollectionViewFragment : Fragment() {
     private lateinit var db: AppDatabase
     private lateinit var recyclerView: RecyclerView
     private lateinit var activity: MainActivity
-    private lateinit var currentCollection: Collection
+    lateinit var currentCollection: Collection
     var editorToggle: Boolean = false
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -52,7 +52,8 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
     implementation("io.noties.markwon:core:$markwonVersion")
     implementation("io.noties.markwon:editor:$markwonVersion")
-
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
+    implementation("me.relex:circleindicator:2.1.6")
     // Default
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

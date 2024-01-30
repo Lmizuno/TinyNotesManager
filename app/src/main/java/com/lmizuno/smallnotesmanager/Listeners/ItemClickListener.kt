@@ -28,7 +28,7 @@ class ItemsClickListener(private val currentFragment: Fragment) : ItemClickListe
                     currentFragment.requireContext(),
                     CollectionPresentationActivity::class.java
                 )
-                intent.putExtra("item", item)
+                intent.putExtra("collection", colViewFrag.currentCollection)
                 colViewFrag.startActivity(intent)
             }
         }
