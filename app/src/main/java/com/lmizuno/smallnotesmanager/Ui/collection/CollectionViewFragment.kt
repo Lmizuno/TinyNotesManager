@@ -1,24 +1,29 @@
 package com.lmizuno.smallnotesmanager.Ui.collection
 
-import com.lmizuno.smallnotesmanager.R
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.lmizuno.smallnotesmanager.Adapters.ItemListAdapter
 import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
+import com.lmizuno.smallnotesmanager.EditorItemActivity
 import com.lmizuno.smallnotesmanager.Listeners.ItemsClickListener
 import com.lmizuno.smallnotesmanager.MainActivity
 import com.lmizuno.smallnotesmanager.Models.Collection
 import com.lmizuno.smallnotesmanager.Models.Item
-import com.lmizuno.smallnotesmanager.EditorItemActivity
+import com.lmizuno.smallnotesmanager.R
 import com.lmizuno.smallnotesmanager.databinding.FragmentCollectionViewBinding
+import com.lmizuno.smallnotesmanager.Scripts.Sharing
+import java.io.File
 
 class CollectionViewFragment : Fragment() {
     private var _binding: FragmentCollectionViewBinding? = null
@@ -66,7 +71,7 @@ class CollectionViewFragment : Fragment() {
             }
         }
 
-        binding.bottomAppBar.setOnMenuItemClickListener{
+        binding.bottomAppBar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.addItemButton -> {
                     val intent = Intent(requireContext(), EditorItemActivity::class.java)
@@ -76,7 +81,29 @@ class CollectionViewFragment : Fragment() {
                 }
 
                 R.id.shareCollection -> {
-                    //TODO: create a way to share as a unique file to be imported later
+                    val file: File? = Sharing().saveToFile(currentCollection, requireContext())
+
+                    if (file != null) {
+                        val uri: Uri = FileProvider.getUriForFile(
+                            requireContext(),
+                            "com.smallnotesmanager.fileprovider",
+                            file,
+                        )
+
+                        val shareIntent: Intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_STREAM, uri)
+                            type = "application/octet-stream"
+                        }
+
+                        startActivity(
+                            Intent.createChooser(
+                                shareIntent,
+                                "Share ${currentCollection.name}"
+                            )
+                        )
+                    }
+
                     true
                 }
 
@@ -84,13 +111,13 @@ class CollectionViewFragment : Fragment() {
                     //TODO: create a way to download as PDF
                     true
                 }
+
                 else -> false
             }
         }
 
         return root
     }
-
 
 
     override fun onDestroyView() {
