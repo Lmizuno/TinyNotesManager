@@ -1,0 +1,51 @@
+<vector android:height="1000dp"
+    android:viewportHeight="32"
+    android:viewportWidth="32"
+    android:width="1000dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <path
+        android:fillColor="#263238"
+        android:pathData="M14.5,17.5h3c0,0.83 -0.67,1.5 -1.5,1.5S14.5,18.33 14.5,17.5z" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M16,19c-0.83,0 -1.5,-0.67 -1.5,-1.5h3C17.5,18.33 16.83,19 16,19z"
+        android:strokeColor="#455A64"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M22.5,16c0,-0.553 -0.448,-1 -1,-1s-1,0.447 -1,1"
+        android:strokeColor="#455A64"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M11.5,16c0,-0.553 -0.448,-1 -1,-1s-1,0.447 -1,1"
+        android:strokeColor="#455A64"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M16,19c-0.83,0 -1.5,-0.67 -1.5,-1.5h3C17.5,18.33 16.83,19 16,19z"
+        android:strokeColor="#263238"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M22.5,16c0,-0.553 -0.448,-1 -1,-1s-1,0.447 -1,1"
+        android:strokeColor="#263238"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M11.5,16c0,-0.553 -0.448,-1 -1,-1s-1,0.447 -1,1"
+        android:strokeColor="#263238"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1" />
+</vector>
