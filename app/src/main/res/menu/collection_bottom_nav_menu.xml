@@ -21,7 +21,7 @@
     <!--        app:showAsAction="ifRoom" />-->
     <item
         android:id="@+id/deleteCollection"
-        android:icon="@android:drawable/ic_menu_delete"
+        android:icon="@drawable/recycle_bin_icon"
         android:title="Delete"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 </menu>
