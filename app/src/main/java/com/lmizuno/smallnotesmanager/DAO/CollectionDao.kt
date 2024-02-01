@@ -14,13 +14,13 @@ interface CollectionDao {
     fun insert(collection: Collection): Long
 
     @Query("SELECT * FROM collections WHERE collectionId = :collectionId")
-    fun getCollectionById(collectionId: Int): Collection?
+    fun getCollectionById(collectionId: Long): Collection?
 
     @Query("SELECT * FROM collections")
     fun getAll(): List<Collection>
 
     @Query("SELECT * FROM items WHERE collectionId = :collectionId ORDER BY itemId ASC")
-    fun getCollectionItems(collectionId: Int): List<Item>
+    fun getCollectionItems(collectionId: Long): List<Item>
 
     @Delete
     fun deleteCollectionAndItems(collection: Collection)

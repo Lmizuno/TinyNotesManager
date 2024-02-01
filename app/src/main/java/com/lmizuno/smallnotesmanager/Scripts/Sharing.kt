@@ -1,57 +1,77 @@
 package com.lmizuno.smallnotesmanager.Scripts
 
+import android.annotation.SuppressLint
+import android.content.ContentResolver
 import android.content.Context
+import android.net.Uri
 import android.os.Environment
+import android.util.Log
+import com.google.gson.Gson
 import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
 import com.lmizuno.smallnotesmanager.Models.Collection
 import com.lmizuno.smallnotesmanager.Models.Item
+import com.lmizuno.smallnotesmanager.Models.SharingData
 import org.apache.commons.io.FilenameUtils
+import java.io.BufferedReader
 import java.io.File
+import java.io.FileInputStream
 import java.io.FileWriter
 import java.io.IOException
+import java.io.InputStreamReader
 
 class Sharing {
-
-    //TODO: Test this
+    @SuppressLint("SetWorldReadable", "SetWorldWritable")
     fun saveToFile(collection: Collection, context: Context): File? {
         val downloadsPath =
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
 
-        //val sharingPath = File(context.cacheDir, "smallNotesManager")
-        val newFile = File(downloadsPath, "binder_${FilenameUtils.normalize(collection.name)}.smn")
+        val newFile = File(
+            downloadsPath,
+            "binder_${FilenameUtils.normalize(collection.name.lowercase())}.json"
+        )
 
         val items: List<Item> = AppDatabase.getInstance(context).collectionDao()
             .getCollectionItems(collection.collectionId)
 
-        //Basic and dumb export, we'll figure it out :)
         try {
             FileWriter(newFile).use { writer ->
-                writer.appendLine("//born")
+                val sharingObj = SharingData(collection, items)
+                val json: String = Gson().toJson(sharingObj)
 
-                writer.appendLine("name=${collection.name}")
-                writer.appendLine("description=${collection.description}")
-
-                items.forEach {
-                    writer.appendLine("//begin")
-                    writer.appendLine("title=${it.title}")
-                    writer.appendLine("content=${it.content}")
-                    writer.appendLine("//end")
-                }
-
-                writer.appendLine("//dead")
+                writer.appendLine(json)
             }
-
-            //this might show that dialog to share the file
-            return newFile
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        return null
+
+        newFile.setReadable(true, false)
+        newFile.setWritable(true, false)
+        newFile.setExecutable(true, false)
+
+        return newFile
     }
 
-    //TODO: receive context and use DAO to insert whatever new thing we get
-    fun ImportFromFile(path: String, context: Context) {
-        val db = AppDatabase.getInstance(context)
+    fun importFromFile(path: Uri, context: Context) {
+        val inputStream = context.contentResolver.openInputStream(path)
 
+        try {
+            val db = AppDatabase.getInstance(context)
+
+            val fileContent = inputStream?.bufferedReader().use { it?.readText() }
+            val sharingData = Gson().fromJson(fileContent, SharingData::class.java)
+
+            val newCollection =
+                Collection(0, sharingData.collection.name, sharingData.collection.description)
+            val colID = db.collectionDao().insert(newCollection)
+
+            sharingData.items.forEach {
+                val newItem = Item(0, colID, it.title, it.content)
+                db.itemDao().insert(newItem)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            inputStream?.close()
+        }
     }
 }

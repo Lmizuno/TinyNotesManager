@@ -13,7 +13,6 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.Gson
 import com.lmizuno.smallnotesmanager.Adapters.ItemListAdapter
 import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
 import com.lmizuno.smallnotesmanager.EditorItemActivity

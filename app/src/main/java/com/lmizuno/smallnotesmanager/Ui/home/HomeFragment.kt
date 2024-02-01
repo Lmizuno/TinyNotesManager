@@ -2,6 +2,9 @@ package com.lmizuno.smallnotesmanager.Ui.home
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +20,7 @@ import com.lmizuno.smallnotesmanager.Listeners.CollectionsClickListener
 import com.lmizuno.smallnotesmanager.Models.Collection
 import com.lmizuno.smallnotesmanager.NewCollectionActivity
 import com.lmizuno.smallnotesmanager.R
+import com.lmizuno.smallnotesmanager.Scripts.Sharing
 import com.lmizuno.smallnotesmanager.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -47,8 +51,34 @@ class HomeFragment : Fragment() {
             newCollectionActivityResultLauncher.launch(intent)
         }
 
+        binding.bottomAppBar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.importCollection -> {
+                    val intent = Intent()
+                        .setType("application/json")
+                        .setAction(Intent.ACTION_GET_CONTENT)
+                    fileChooserActivity.launch(Intent.createChooser(intent, "Select a file"))
+
+                    true
+                }
+
+                else -> false
+            }
+        }
+
         return root
     }
+
+    private val fileChooserActivity =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                val selectedFileUri: Uri? = it.data?.data
+                if (selectedFileUri != null) {
+
+                    Sharing().importFromFile(selectedFileUri, requireContext())
+                }
+            }
+        }
 
     override fun onDestroyView() {
         super.onDestroyView()
