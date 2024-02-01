@@ -3,12 +3,13 @@ package com.lmizuno.smallnotesmanager
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
+import android.view.View
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
+import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
 import com.lmizuno.smallnotesmanager.Models.Item
 import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
@@ -19,6 +20,7 @@ class EditorItemActivity : AppCompatActivity() {
     private lateinit var content: TextInputEditText
     private lateinit var title: TextInputEditText
     private lateinit var doneButton: Button
+    private lateinit var removeButton: Button
     private var item: Item? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +29,7 @@ class EditorItemActivity : AppCompatActivity() {
         title = findViewById(R.id.titleInput)
         content = findViewById(R.id.contentInput)
         doneButton = findViewById(R.id.doneItemButton)
+        removeButton = findViewById(R.id.removeItemButton)
 
         val markwon = Markwon.create(this)
 
@@ -41,23 +44,31 @@ class EditorItemActivity : AppCompatActivity() {
             if (item != null) {
                 title.setText(item!!.title)
                 content.setText(item!!.content)
+
+                removeButton.visibility = View.VISIBLE
+            } else {
+                removeButton.visibility = View.INVISIBLE
             }
         }
 
         doneButton.setOnClickListener {
             if (title.text.isNullOrEmpty()) {
-                Toast.makeText(this, "Please add a name", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.please_add_a_name), Toast.LENGTH_SHORT)
+                    .show()
                 return@setOnClickListener
             }
             if (content.text.isNullOrEmpty()) {
-                Toast.makeText(this, "Please add a description", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    getString(R.string.please_add_a_description), Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
 
             if (item == null) {
                 //If there was no item passed we create a new one
                 item = Item(0, 0, title.text.toString(), content.text.toString())
-            }else{
+            } else {
                 //If there was, we update it
                 item!!.title = title.text.toString()
                 item!!.content = content.text.toString()
@@ -67,6 +78,21 @@ class EditorItemActivity : AppCompatActivity() {
             intent.putExtra("item", item)
             setResult(Activity.RESULT_OK, intent)
             finish()
+        }
+
+        if (item != null) {
+            removeButton.setOnClickListener {
+                val builder = AlertDialog.Builder(this)
+
+                builder.setMessage(getString(R.string.delete_question) + item!!.title)
+                    .setPositiveButton(getString(R.string.remove)) { dialog, id ->
+                        AppDatabase.getInstance(this).itemDao().delete(item!!)
+                        finish()
+                    }
+                    .setNegativeButton(getString(R.string.cancel)) { dialog, id ->
+                    }
+                builder.create().show()
+            }
         }
     }
 }

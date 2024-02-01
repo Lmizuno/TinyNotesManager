@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.lmizuno.smallnotesmanager.R
 
 
 //https://developer.android.com/develop/ui/views/components/dialogs
@@ -16,10 +17,10 @@ class DeleteDialogFragment(
         return activity?.let {
             val builder = AlertDialog.Builder(it)
             builder.setMessage(message)
-                .setPositiveButton("Delete") { dialog, id ->
+                .setPositiveButton(getString(R.string.remove)) { dialog, id ->
                     confirm()
                 }
-                .setNegativeButton("Cancel") { dialog, id ->
+                .setNegativeButton(getString(R.string.cancel)) { dialog, id ->
                     cancel()
                 }
             builder.create()

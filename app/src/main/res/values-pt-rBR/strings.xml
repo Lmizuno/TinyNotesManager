@@ -12,4 +12,8 @@
     <string name="content">Conteúdo</string>
     <string name="title">Título</string>
     <string name="remove">Deletar</string>
+    <string name="delete_question">"Deseja remover: "</string>
+    <string name="cancel">Cancel</string>
+    <string name="please_add_a_description">Adicione uma descrição</string>
+    <string name="please_add_a_name">Adicione um nome</string>
 </resources>
