@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.lmizuno.smallnotesmanager"
-        minSdk = 33
+        minSdk = 30
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"

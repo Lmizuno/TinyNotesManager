@@ -7,6 +7,7 @@ import com.lmizuno.smallnotesmanager.Adapters.PresentationAdapter
 import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
 import com.lmizuno.smallnotesmanager.Models.Collection
 import com.lmizuno.smallnotesmanager.Models.Item
+import com.lmizuno.smallnotesmanager.Scripts.DeprecationManager
 import io.noties.markwon.Markwon
 import me.relex.circleindicator.CircleIndicator3
 
@@ -20,8 +21,9 @@ class CollectionPresentationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_collection_presentation)
 
         if (intent != null && intent.hasExtra("collection")) {
-            collection = intent.getSerializableExtra("collection", Collection::class.java)!!
-            item = intent.getSerializableExtra("item", Item::class.java)!!
+            collection =
+                DeprecationManager().getSerializable(intent, "collection", Collection::class.java)
+            item = DeprecationManager().getSerializable(intent, "item", Item::class.java)
 
             db =
                 AppDatabase.getInstance(baseContext) //TODO: this might create a mismatch between databases versions, analyse it

@@ -18,8 +18,10 @@ import com.lmizuno.smallnotesmanager.Listeners.CollectionsClickListener
 import com.lmizuno.smallnotesmanager.Models.Collection
 import com.lmizuno.smallnotesmanager.NewCollectionActivity
 import com.lmizuno.smallnotesmanager.R
+import com.lmizuno.smallnotesmanager.Scripts.DeprecationManager
 import com.lmizuno.smallnotesmanager.Scripts.Sharing
 import com.lmizuno.smallnotesmanager.databinding.FragmentHomeBinding
+
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -101,11 +103,16 @@ class HomeFragment : Fragment() {
     private val newCollectionActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent? = result.data
+                val intent: Intent? = result.data
 
-                val coll: Collection? =
-                    data?.getSerializableExtra("collection", Collection::class.java)
-                db.collectionDao().insert(coll!!)
+                if (intent?.hasExtra("collection") == true) {
+                    val coll: Collection = DeprecationManager().getSerializable(
+                        intent,
+                        "collection",
+                        Collection::class.java
+                    )
+                    db.collectionDao().insert(coll)
+                }
 
                 //List will be updated by onResume
             }

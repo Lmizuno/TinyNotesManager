@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
 import com.lmizuno.smallnotesmanager.Models.Item
+import com.lmizuno.smallnotesmanager.Scripts.DeprecationManager
 import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
@@ -38,16 +39,14 @@ class EditorItemActivity : AppCompatActivity() {
 
         //Set item to update if something was passed
         if (intent != null && intent.hasExtra("item")) {
-            item = intent.getSerializableExtra("item", Item::class.java)
+            item = DeprecationManager().getSerializable(intent, "item", Item::class.java)
 
-            if (item != null) {
-                title.setText(item!!.title)
-                content.setText(item!!.content)
+            title.setText(item!!.title)
+            content.setText(item!!.content)
 
-                removeButton.visibility = View.VISIBLE
-            } else {
-                removeButton.visibility = View.INVISIBLE
-            }
+            removeButton.visibility = View.VISIBLE
+        } else if (intent != null && !intent.hasExtra("item")) {
+            removeButton.visibility = View.INVISIBLE
         }
 
         doneButton.setOnClickListener {

@@ -21,6 +21,7 @@ import com.lmizuno.smallnotesmanager.MainActivity
 import com.lmizuno.smallnotesmanager.Models.Collection
 import com.lmizuno.smallnotesmanager.Models.Item
 import com.lmizuno.smallnotesmanager.R
+import com.lmizuno.smallnotesmanager.Scripts.DeprecationManager
 import com.lmizuno.smallnotesmanager.databinding.FragmentCollectionViewBinding
 import com.lmizuno.smallnotesmanager.Scripts.Sharing
 import com.lmizuno.smallnotesmanager.Ui.dialogs.DeleteDialogFragment
@@ -49,7 +50,14 @@ class CollectionViewFragment : Fragment() {
 
         db = AppDatabase.getInstance(requireContext())
 
-        currentCollection = arguments?.getSerializable("collection", Collection::class.java)!!
+        currentCollection =
+            arguments?.let {
+                DeprecationManager().getSerializable(
+                    it,
+                    "collection",
+                    Collection::class.java
+                )
+            }!!
 
         binding.fabNewItem.setOnClickListener {
             if (!editorToggle) {
@@ -156,7 +164,7 @@ class CollectionViewFragment : Fragment() {
                 val data: Intent? = result.data
 
                 val item: Item? =
-                    data?.getSerializableExtra("item", Item::class.java)
+                    data?.let { DeprecationManager().getSerializable(it, "item", Item::class.java) }
 
                 if (editorToggle) {
                     db.itemDao().update(item!!)
