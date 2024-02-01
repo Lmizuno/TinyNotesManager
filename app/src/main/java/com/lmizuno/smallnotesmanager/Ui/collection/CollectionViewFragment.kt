@@ -77,28 +77,26 @@ class CollectionViewFragment : Fragment() {
                 }
 
                 R.id.shareCollection -> {
-                    val file: File? = Sharing().saveToFile(currentCollection, requireContext())
+                    val file: File = Sharing().saveToFile(currentCollection, requireContext())
 
-                    if (file != null) {
-                        val uri: Uri = FileProvider.getUriForFile(
-                            requireContext(),
-                            "com.smallnotesmanager.fileprovider",
-                            file,
-                        )
+                    val uri: Uri = FileProvider.getUriForFile(
+                        requireContext(),
+                        "com.smallnotesmanager.fileprovider",
+                        file,
+                    )
 
-                        val shareIntent: Intent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_STREAM, uri)
-                            type = "application/octet-stream"
-                        }
-
-                        startActivity(
-                            Intent.createChooser(
-                                shareIntent,
-                                "Share ${currentCollection.name}"
-                            )
-                        )
+                    val shareIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_STREAM, uri)
+                        type = "application/octet-stream"
                     }
+
+                    startActivity(
+                        Intent.createChooser(
+                            shareIntent,
+                            "Share ${currentCollection.name}"
+                        )
+                    )
 
                     true
                 }

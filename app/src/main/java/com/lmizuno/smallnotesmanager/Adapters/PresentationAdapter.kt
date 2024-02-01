@@ -28,7 +28,7 @@ class PresentationAdapter(private var items: List<Item>, private val markwon: Ma
     }
 
     override fun onBindViewHolder(holder: PresentationAdapter.Pager2ViewHolder, position: Int) {
-        items[position].content?.let { markwon.setMarkdown(holder.content, it) };
+        items[position].content.let { markwon.setMarkdown(holder.content, it) }
         holder.title.text = items[position].title
     }
 

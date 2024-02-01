@@ -1,6 +1,5 @@
 package com.lmizuno.smallnotesmanager
 
-import com.lmizuno.smallnotesmanager.R
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
@@ -29,7 +28,7 @@ class CollectionPresentationActivity : AppCompatActivity() {
             val itemList: List<Item> =
                 db.collectionDao().getCollectionItems(collection.collectionId)
 
-            val markwon: Markwon = Markwon.create(this);
+            val markwon: Markwon = Markwon.create(this)
 
             val viewpager: ViewPager2 = findViewById(R.id.pageView)
             viewpager.adapter = PresentationAdapter(itemList, markwon)

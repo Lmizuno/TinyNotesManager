@@ -15,7 +15,6 @@ import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
 
-
 class EditorItemActivity : AppCompatActivity() {
     private lateinit var content: TextInputEditText
     private lateinit var title: TextInputEditText
@@ -35,7 +34,7 @@ class EditorItemActivity : AppCompatActivity() {
 
         val editor = MarkwonEditor.create(markwon)
         //TODO: if slow change to      MarkwonEditorTextWatcher.withPreRender(editor,Executors.newCachedThreadPool(),editText)
-        content.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(editor));
+        content.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(editor))
 
         //Set item to update if something was passed
         if (intent != null && intent.hasExtra("item")) {
