@@ -103,10 +103,10 @@ class CollectionViewFragment : Fragment() {
                     true
                 }
 
-                R.id.downloadCollection -> {
-                    //TODO: create a way to download as PDF
-                    true
-                }
+//                R.id.downloadCollection -> {
+//                    //TODO: create a way to download as PDF
+//                    true
+//                }
 
                 R.id.deleteCollection -> {
                     //Open Dialog

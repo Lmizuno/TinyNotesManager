@@ -11,11 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:paddingBottom="48dp" />
+        android:paddingBottom="28dp" />
 
     <me.relex.circleindicator.CircleIndicator3
         android:layout_alignParentBottom="true"
         android:id="@+id/pageIndicator"
         android:layout_width="match_parent"
-        android:layout_height="48dp" />
+        app:ci_drawable="@drawable/black_oval"
+        android:layout_height="28dp" />
 </RelativeLayout>

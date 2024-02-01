@@ -14,11 +14,11 @@
         android:icon="@drawable/baseline_arrow_circle_up_24"
         android:title="Share"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/downloadCollection"
-        android:icon="@drawable/baseline_arrow_circle_down_24"
-        android:title="Download"
-        app:showAsAction="ifRoom" />
+    <!--    <item-->
+    <!--        android:id="@+id/downloadCollection"-->
+    <!--        android:icon="@drawable/baseline_arrow_circle_down_24"-->
+    <!--        android:title="Download"-->
+    <!--        app:showAsAction="ifRoom" />-->
     <item
         android:id="@+id/deleteCollection"
         android:icon="@android:drawable/ic_menu_delete"
