@@ -25,10 +25,12 @@
             android:exported="false"
             android:theme="@style/Theme.SmallNotesManager.NoActionBar" />
         <activity
+            android:windowSoftInputMode="stateVisible|adjustResize"
             android:name=".EditorItemActivity"
             android:exported="false"
             android:theme="@style/Theme.SmallNotesManager.NoActionBar" />
         <activity
+            android:windowSoftInputMode="stateVisible|adjustResize"
             android:name=".NewCollectionActivity"
             android:exported="false"
             android:theme="@style/Theme.SmallNotesManager.NoActionBar" />
