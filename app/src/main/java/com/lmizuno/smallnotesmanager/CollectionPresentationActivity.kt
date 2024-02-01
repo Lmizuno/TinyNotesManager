@@ -11,9 +11,9 @@ import com.lmizuno.smallnotesmanager.Models.Item
 import io.noties.markwon.Markwon
 import me.relex.circleindicator.CircleIndicator3
 
-
 class CollectionPresentationActivity : AppCompatActivity() {
     private lateinit var collection: Collection
+    private lateinit var item: Item
     private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +22,7 @@ class CollectionPresentationActivity : AppCompatActivity() {
 
         if (intent != null && intent.hasExtra("collection")) {
             collection = intent.getSerializableExtra("collection", Collection::class.java)!!
+            item = intent.getSerializableExtra("item", Item::class.java)!!
 
             db =
                 AppDatabase.getInstance(baseContext) //TODO: this might create a mismatch between databases versions, analyse it
@@ -36,7 +37,14 @@ class CollectionPresentationActivity : AppCompatActivity() {
             val indicator: CircleIndicator3 = findViewById(R.id.pageIndicator)
             indicator.setViewPager(viewpager)
 
-            //adapter.registerAdapterDataObserver(indicator.adapterDataObserver)
+            var currentItemIndex = 0
+            itemList.forEachIndexed { index, element ->
+                if (item.itemId == element.itemId) {
+                    currentItemIndex = index
+                }
+            }
+
+            viewpager.currentItem = currentItemIndex
         }
     }
 }
