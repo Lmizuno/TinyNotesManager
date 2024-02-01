@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Tiny Notes Manager</string>
+    <string name="title_notifications">Notificações</string>
+    <string name="title_collectionView">Coleções</string>
+    <string name="fab_collection">Nova Coleção</string>
+    <string name="fab_item">Novo Item</string>
+    <string name="collection_input_hint_name">Nome</string>
+    <string name="collection_input_hint_description">Descrição</string>
+    <string name="add">Pronto</string>
+    <string name="done">Pronto</string>
+    <string name="content">Conteúdo</string>
+    <string name="title">Título</string>
+    <string name="remove">Deletar</string>
+</resources>
