@@ -11,9 +11,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.lmizuno.smallnotesmanager.Adapters.ItemListAdapter
+import com.lmizuno.smallnotesmanager.Adapters.ItemMoveCallback
 import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
 import com.lmizuno.smallnotesmanager.EditorItemActivity
 import com.lmizuno.smallnotesmanager.Listeners.ItemsClickListener
@@ -22,14 +24,13 @@ import com.lmizuno.smallnotesmanager.Models.Collection
 import com.lmizuno.smallnotesmanager.Models.Item
 import com.lmizuno.smallnotesmanager.R
 import com.lmizuno.smallnotesmanager.Scripts.DeprecationManager
-import com.lmizuno.smallnotesmanager.databinding.FragmentCollectionViewBinding
 import com.lmizuno.smallnotesmanager.Scripts.Sharing
 import com.lmizuno.smallnotesmanager.Ui.dialogs.DeleteDialogFragment
+import com.lmizuno.smallnotesmanager.databinding.FragmentCollectionViewBinding
 import java.io.File
 
 class CollectionViewFragment : Fragment() {
     private var _binding: FragmentCollectionViewBinding? = null
-
     private val binding get() = _binding!!
     private lateinit var db: AppDatabase
     private lateinit var recyclerView: RecyclerView
@@ -54,6 +55,10 @@ class CollectionViewFragment : Fragment() {
         adapter = ItemListAdapter(ArrayList(), ItemsClickListener(this))
         recyclerView.adapter = adapter
 
+        val callback: ItemTouchHelper.Callback = ItemMoveCallback(adapter)
+        val touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(recyclerView)
+
         db = AppDatabase.getInstance(requireContext())
 
         currentCollection =
@@ -71,14 +76,26 @@ class CollectionViewFragment : Fragment() {
                 binding.fabEditorMode.backgroundTintList =
                     resources.getColorStateList(R.color.yellow_pastel, requireContext().theme)
 
-                editorToggle = !editorToggle
             } else {
                 binding.fabEditorMode.setImageResource(R.drawable.baseline_app_shortcut_24)
 
                 binding.fabEditorMode.backgroundTintList =
                     resources.getColorStateList(R.color.teal_200, requireContext().theme)
-                editorToggle = !editorToggle
+
+                if (adapter.timeOfLastModification != adapter.timeLastUpdated) {
+                    val newList = adapter.itemList
+
+                    newList.forEachIndexed { index, element ->
+                        element.orderN = index.toLong() + 1
+                        db.itemDao().update(element)
+                    }
+
+                    adapter.timeLastUpdated = adapter.timeOfLastModification
+                }
             }
+
+            editorToggle = !editorToggle
+            adapter.setEditorToggle(editorToggle)
         }
 
         binding.bottomAppBar.setOnMenuItemClickListener {
