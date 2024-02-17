@@ -4,39 +4,38 @@
     android:id="@+id/collection_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="0dp"
-    app:cardCornerRadius="0dp"
-    app:cardElevation="0dp"
-    app:cornerRadius="0px"
-    >
+    android:layout_marginVertical="5dp">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="0dp"
-        android:outlineAmbientShadowColor="#000000"
-        android:paddingVertical="1dp"
-
-
-        android:background="@color/gray"
-        android:layout_marginVertical="5dp"
-        >
+        android:layout_height="match_parent"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="5dp">
 
         <TextView
             android:id="@+id/collection_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:elevation="0dp"
-            android:paddingVertical="5dp"
+            android:background="@color/white"
             android:singleLine="true"
-            android:textAlignment="center"
-            android:textAllCaps="true"
+            android:text="Place Holder"
+            android:textAlignment="textStart"
             android:textColor="@color/black"
             android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            app:cornerRadius="3dp"
+        <TextView
+            android:id="@+id/collection_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/white"
-            />
-    </RelativeLayout>
+            android:singleLine="true"
+            android:text="Place Description"
+            android:textAlignment="textStart"
+            android:textColor="@color/dark_gray"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/collection_name" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

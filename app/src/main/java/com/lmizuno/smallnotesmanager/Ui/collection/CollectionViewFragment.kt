@@ -72,6 +72,7 @@ class CollectionViewFragment : Fragment() {
 
         activity.title = currentCollection.name
 
+
         binding.fabEditorMode.setOnClickListener {
             if (!editorToggle) {
                 binding.fabEditorMode.setImageResource(R.drawable.baseline_app_settings_alt_24)

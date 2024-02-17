@@ -25,6 +25,7 @@ class CollectionListAdapter(
         val currentItem = collectionList[position]
 
         holder.nameTextView.text = currentItem.name
+        holder.decriptionTextView.text = currentItem.description
 
         holder.collectionContainer.setOnClickListener{
             listener.onClick(currentItem)
@@ -44,4 +45,5 @@ class CollectionListAdapter(
 class CollectionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var collectionContainer: CardView = itemView.findViewById(R.id.collection_container)
     var nameTextView: TextView = itemView.findViewById(R.id.collection_name)
+    var decriptionTextView: TextView = itemView.findViewById(R.id.collection_description)
 }
