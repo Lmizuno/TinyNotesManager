@@ -143,7 +143,10 @@ class CollectionViewFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        updateRecycler(db.collectionDao().getCollectionItems(currentCollection.collectionId))
+
+        val array = arrayListOf<Item>()
+        array.addAll(db.collectionDao().getCollectionItems(currentCollection.collectionId))
+        updateRecycler(array)
     }
 
     override fun onDestroyView() {
@@ -151,7 +154,7 @@ class CollectionViewFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun updateRecycler(items: List<Item>) {
+    private fun updateRecycler(items: ArrayList<Item>) {
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
