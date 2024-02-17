@@ -57,7 +57,12 @@ class HomeFragment : Fragment() {
                     val intent = Intent()
                         .setType("application/json")
                         .setAction(Intent.ACTION_GET_CONTENT)
-                    fileChooserActivity.launch(Intent.createChooser(intent, "Select a file"))
+                    fileChooserActivity.launch(
+                        Intent.createChooser(
+                            intent,
+                            getString(R.string.select_file)
+                        )
+                    ) //"Select a file"
 
                     true
                 }
@@ -65,6 +70,8 @@ class HomeFragment : Fragment() {
                 else -> false
             }
         }
+
+        activity?.title = getString(R.string.title_home)
 
         return root
     }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Tiny Notes Manager</string>
+    <string name="app_name" translatable="false">Tiny Notes Manager</string>
     <string name="title_home" translatable="false">Home</string>
     <string name="title_dashboard" translatable="false">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -18,4 +18,5 @@
     <string name="cancel">Cancel</string>
     <string name="please_add_a_description">Please add a description</string>
     <string name="please_add_a_name">Please add a name</string>
+    <string name="select_file">Select File</string>
 </resources>
