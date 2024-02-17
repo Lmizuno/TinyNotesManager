@@ -17,9 +17,11 @@ import java.io.Serializable
 )
 data class Item(
     @PrimaryKey(autoGenerate = true)
-    var itemId: Long,
+    var itemId: Long = 0,
     @ColumnInfo(index = true)
-    var collectionId: Long,
-    var title: String,
-    var content: String
+    var collectionId: Long = 0,
+    var title: String = "",
+    var content: String = "",
+    @ColumnInfo(defaultValue = "1")
+    var orderN: Long = 0
 ) : Serializable

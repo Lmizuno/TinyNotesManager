@@ -16,9 +16,6 @@ interface ItemDao {
     @Query("SELECT * FROM items WHERE itemId = :itemId")
     fun getItemById(itemId: Long): Item?
 
-    @Query("SELECT * FROM items WHERE collectionId = :collectionId ORDER BY itemId ASC")
-    fun getItemsByCollection(collectionId: Long): List<Item>
-
     @Update(onConflict = OnConflictStrategy.ABORT)
     fun update(item: Item): Int
 

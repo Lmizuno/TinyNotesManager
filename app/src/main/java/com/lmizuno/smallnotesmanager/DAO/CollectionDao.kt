@@ -19,8 +19,11 @@ interface CollectionDao {
     @Query("SELECT * FROM collections")
     fun getAll(): List<Collection>
 
-    @Query("SELECT * FROM items WHERE collectionId = :collectionId ORDER BY itemId ASC")
+    @Query("SELECT * FROM items WHERE collectionId = :collectionId ORDER BY orderN ASC")
     fun getCollectionItems(collectionId: Long): List<Item>
+
+    @Query("SELECT COUNT(*) FROM items WHERE collectionId = :collectionId")
+    fun getCollectionSize(collectionId: Long): Long
 
     @Delete
     fun deleteCollectionAndItems(collection: Collection)
