@@ -65,17 +65,17 @@ class CollectionViewFragment : Fragment() {
                 )
             }!!
 
-        binding.fabNewItem.setOnClickListener {
+        binding.fabEditorMode.setOnClickListener {
             if (!editorToggle) {
-                binding.fabNewItem.setImageResource(R.drawable.baseline_app_settings_alt_24)
-                binding.fabNewItem.backgroundTintList =
+                binding.fabEditorMode.setImageResource(R.drawable.baseline_app_settings_alt_24)
+                binding.fabEditorMode.backgroundTintList =
                     resources.getColorStateList(R.color.yellow_pastel, requireContext().theme)
 
                 editorToggle = !editorToggle
             } else {
-                binding.fabNewItem.setImageResource(R.drawable.baseline_app_shortcut_24)
+                binding.fabEditorMode.setImageResource(R.drawable.baseline_app_shortcut_24)
 
-                binding.fabNewItem.backgroundTintList =
+                binding.fabEditorMode.backgroundTintList =
                     resources.getColorStateList(R.color.teal_200, requireContext().theme)
                 editorToggle = !editorToggle
             }

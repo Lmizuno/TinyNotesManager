@@ -16,7 +16,7 @@
         android:layout_marginBottom="55dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_new_item"
+        android:id="@+id/fab_editor_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/fab_item"
