@@ -33,6 +33,7 @@ class CollectionViewFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var db: AppDatabase
     private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: ItemListAdapter
     private lateinit var activity: MainActivity
     lateinit var currentCollection: Collection
     var editorToggle: Boolean = false
@@ -47,6 +48,11 @@ class CollectionViewFragment : Fragment() {
         activity = requireActivity() as MainActivity
 
         recyclerView = binding.recyclerCollection
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        adapter = ItemListAdapter(ArrayList(), ItemsClickListener(this))
+        recyclerView.adapter = adapter
 
         db = AppDatabase.getInstance(requireContext())
 
@@ -144,9 +150,7 @@ class CollectionViewFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        val array = arrayListOf<Item>()
-        array.addAll(db.collectionDao().getCollectionItems(currentCollection.collectionId))
-        updateRecycler(array)
+        updateAdapter(db.collectionDao().getCollectionItems(currentCollection.collectionId))
     }
 
     override fun onDestroyView() {
@@ -154,12 +158,12 @@ class CollectionViewFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun updateRecycler(items: ArrayList<Item>) {
-        recyclerView.setHasFixedSize(true)
-        recyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        val adapter = ItemListAdapter(items, ItemsClickListener(this))
-        recyclerView.adapter = adapter
+    private fun updateAdapter(items: List<Item>) {
+        val array = arrayListOf<Item>()
+        array.addAll(items)
+
+        adapter.itemList = array
+        adapter.notifyDataSetChanged()
     }
 
     val editorItemActivityResultLauncher =

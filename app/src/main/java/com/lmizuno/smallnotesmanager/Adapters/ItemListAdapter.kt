@@ -11,7 +11,7 @@ import com.lmizuno.smallnotesmanager.Models.Item
 import com.lmizuno.smallnotesmanager.Listeners.ItemClickListener
 
 class ItemListAdapter(
-    private val itemList: ArrayList<Item>,
+    var itemList: ArrayList<Item>,
     private val listener: ItemClickListener
 ) :
     RecyclerView.Adapter<ItemViewHolder>() {
