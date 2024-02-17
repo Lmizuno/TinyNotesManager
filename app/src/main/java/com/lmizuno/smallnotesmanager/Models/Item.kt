@@ -23,5 +23,5 @@ data class Item(
     var title: String = "",
     var content: String = "",
     @ColumnInfo(defaultValue = "1")
-    var orderN: Long = 0
+    var orderN: Long = 1
 ) : Serializable

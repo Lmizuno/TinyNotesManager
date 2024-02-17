@@ -166,14 +166,19 @@ class CollectionViewFragment : Fragment() {
                 val item: Item? =
                     data?.let { DeprecationManager().getSerializable(it, "item", Item::class.java) }
 
+                //TODO: this conflicts when trying to add with the button toggled to edit mode
                 if (editorToggle) {
                     db.itemDao().update(item!!)
                 } else {
                     if (item != null) {
                         item.collectionId = currentCollection.collectionId
-                    }
 
-                    db.itemDao().insert(item!!)
+                        val sizeOfCollection =
+                            db.collectionDao().getCollectionSize(currentCollection.collectionId)
+                        item.orderN = sizeOfCollection + 1
+
+                        db.itemDao().insert(item)
+                    }
                 }
             }
         }
