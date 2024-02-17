@@ -25,8 +25,7 @@ class CollectionPresentationActivity : AppCompatActivity() {
                 DeprecationManager().getSerializable(intent, "collection", Collection::class.java)
             item = DeprecationManager().getSerializable(intent, "item", Item::class.java)
 
-            db =
-                AppDatabase.getInstance(baseContext) //TODO: this might create a mismatch between databases versions, analyse it
+            db = AppDatabase.getInstance(baseContext)
             val itemList: List<Item> =
                 db.collectionDao().getCollectionItems(collection.collectionId)
 
