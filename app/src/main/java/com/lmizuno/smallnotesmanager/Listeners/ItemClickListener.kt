@@ -21,6 +21,8 @@ class ItemsClickListener(private val currentFragment: Fragment) : ItemClickListe
                 val intent =
                     Intent(currentFragment.requireContext(), EditorItemActivity::class.java)
                 intent.putExtra("item", item)
+                intent.putExtra("intent", "update")
+
                 colViewFrag.editorItemActivityResultLauncher.launch(intent)
             } else {
                 //Presentation mode

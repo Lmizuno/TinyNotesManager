@@ -79,6 +79,7 @@ class CollectionViewFragment : Fragment() {
             when (it.itemId) {
                 R.id.addItemButton -> {
                     val intent = Intent(requireContext(), EditorItemActivity::class.java)
+                    intent.putExtra("intent", "add")
                     editorItemActivityResultLauncher.launch(intent)
 
                     true
@@ -165,9 +166,9 @@ class CollectionViewFragment : Fragment() {
 
                 val item: Item? =
                     data?.let { DeprecationManager().getSerializable(it, "item", Item::class.java) }
+                val intent: String? = data?.getStringExtra("intent")
 
-                //TODO: this conflicts when trying to add with the button toggled to edit mode
-                if (editorToggle) {
+                if (intent == "update") {
                     db.itemDao().update(item!!)
                 } else {
                     if (item != null) {

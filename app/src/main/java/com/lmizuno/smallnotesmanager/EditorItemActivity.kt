@@ -37,15 +37,20 @@ class EditorItemActivity : AppCompatActivity() {
         //TODO: if slow change to      MarkwonEditorTextWatcher.withPreRender(editor,Executors.newCachedThreadPool(),editText)
         content.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(editor))
 
-        //Set item to update if something was passed
-        if (intent != null && intent.hasExtra("item")) {
+        //Set item to update or add
+        var updateMode: Boolean = false
+        if (intent != null && intent.hasExtra("intent")) {
+            updateMode = (intent.getStringExtra("intent") != "add")
+        }
+
+        if (updateMode) {
             item = DeprecationManager().getSerializable(intent, "item", Item::class.java)
 
             title.setText(item!!.title)
             content.setText(item!!.content)
 
             removeButton.visibility = View.VISIBLE
-        } else if (intent != null && !intent.hasExtra("item")) {
+        } else {
             removeButton.visibility = View.INVISIBLE
         }
 
@@ -72,9 +77,10 @@ class EditorItemActivity : AppCompatActivity() {
                 item!!.content = content.text.toString()
             }
 
-            val intent = Intent()
-            intent.putExtra("item", item)
-            setResult(Activity.RESULT_OK, intent)
+            val intentReturn = Intent()
+            intentReturn.putExtra("item", item)
+            intentReturn.putExtra("intent", intent.getStringExtra("intent"))
+            setResult(Activity.RESULT_OK, intentReturn)
             finish()
         }
 
