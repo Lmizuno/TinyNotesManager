@@ -7,7 +7,6 @@ plugins {
 android {
     namespace = "com.lmizuno.smallnotesmanager"
     compileSdk = 34
-
     defaultConfig {
         applicationId = "com.lmizuno.smallnotesmanager"
         minSdk = 30
@@ -24,7 +23,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isDebuggable = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
