@@ -2,17 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="HardcodedText"
     >
     <item
         android:id="@+id/addItemButton"
         android:icon="@drawable/baseline_add_circle_outline_24"
-        android:title="Add"
+        android:title="@string/add"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/shareCollection"
         android:icon="@drawable/baseline_arrow_circle_up_24"
-        android:title="Share"
+        android:title="@string/share"
         app:showAsAction="ifRoom" />
     <!--    <item-->
     <!--        android:id="@+id/downloadCollection"-->
@@ -21,7 +20,10 @@
     <!--        app:showAsAction="ifRoom" />-->
     <item
         android:id="@+id/deleteCollection"
-        android:icon="@drawable/recycle_bin_icon"
-        android:title="Delete"
+        android:title="@string/remove"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/editCollection"
+        android:title="@string/edit"
         app:showAsAction="never" />
 </menu>

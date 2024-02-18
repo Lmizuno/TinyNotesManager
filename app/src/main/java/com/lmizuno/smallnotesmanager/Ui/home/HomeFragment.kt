@@ -16,7 +16,7 @@ import com.lmizuno.smallnotesmanager.Adapters.CollectionListAdapter
 import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
 import com.lmizuno.smallnotesmanager.Listeners.CollectionsClickListener
 import com.lmizuno.smallnotesmanager.Models.Collection
-import com.lmizuno.smallnotesmanager.NewCollectionActivity
+import com.lmizuno.smallnotesmanager.EditorCollectionActivity
 import com.lmizuno.smallnotesmanager.R
 import com.lmizuno.smallnotesmanager.Scripts.DeprecationManager
 import com.lmizuno.smallnotesmanager.Scripts.Sharing
@@ -47,7 +47,8 @@ class HomeFragment : Fragment() {
         updateRecycler(collectionList)
 
         binding.fabNewCollection.setOnClickListener {
-            val intent = Intent(requireContext(), NewCollectionActivity::class.java)
+            val intent = Intent(requireContext(), EditorCollectionActivity::class.java)
+            intent.putExtra("intent", "add")
             newCollectionActivityResultLauncher.launch(intent)
         }
 

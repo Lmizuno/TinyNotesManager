@@ -31,7 +31,7 @@
             android:theme="@style/Theme.SmallNotesManager.NoActionBar" />
         <activity
             android:windowSoftInputMode="stateVisible|adjustResize"
-            android:name=".NewCollectionActivity"
+            android:name=".EditorCollectionActivity"
             android:exported="false"
             android:theme="@style/Theme.SmallNotesManager.NoActionBar" />
         <activity

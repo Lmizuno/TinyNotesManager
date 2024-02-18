@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.lmizuno.smallnotesmanager.Models.Collection
 import com.lmizuno.smallnotesmanager.Models.Item
 
@@ -24,6 +25,9 @@ interface CollectionDao {
 
     @Query("SELECT COUNT(*) FROM items WHERE collectionId = :collectionId")
     fun getCollectionSize(collectionId: Long): Long
+
+    @Update(onConflict = OnConflictStrategy.ABORT)
+    fun update(collection: Collection): Int
 
     @Delete
     fun deleteCollectionAndItems(collection: Collection)

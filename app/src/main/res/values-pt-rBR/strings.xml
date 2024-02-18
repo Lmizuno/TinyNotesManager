@@ -6,7 +6,7 @@
     <string name="fab_item">Novo Item</string>
     <string name="collection_input_hint_name">Nome</string>
     <string name="collection_input_hint_description">Descrição</string>
-    <string name="add">Pronto</string>
+    <string name="add">Adicionar</string>
     <string name="done">Pronto</string>
     <string name="content">Conteúdo</string>
     <string name="title">Título</string>
@@ -16,4 +16,6 @@
     <string name="please_add_a_description">Adicione uma descrição</string>
     <string name="please_add_a_name">Adicione um nome</string>
     <string name="select_file">Selecione um arquivo</string>
+    <string name="share">Compartilhar</string>
+    <string name="edit">Modificar</string>
 </resources>

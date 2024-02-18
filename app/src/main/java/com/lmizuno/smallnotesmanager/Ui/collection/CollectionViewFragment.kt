@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.lmizuno.smallnotesmanager.Adapters.ItemListAdapter
 import com.lmizuno.smallnotesmanager.Adapters.ItemMoveCallback
 import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
+import com.lmizuno.smallnotesmanager.EditorCollectionActivity
 import com.lmizuno.smallnotesmanager.EditorItemActivity
 import com.lmizuno.smallnotesmanager.Listeners.ItemsClickListener
 import com.lmizuno.smallnotesmanager.MainActivity
@@ -160,6 +161,15 @@ class CollectionViewFragment : Fragment() {
                     true
                 }
 
+                R.id.editCollection -> {
+                    val intent = Intent(requireContext(), EditorCollectionActivity::class.java)
+                    intent.putExtra("intent", "update")
+                    intent.putExtra("collection", currentCollection)
+                    editorCollectionActivityResultLauncher.launch(intent)
+
+                    true
+                }
+
                 else -> false
             }
         }
@@ -185,6 +195,27 @@ class CollectionViewFragment : Fragment() {
         adapter.itemList = array
         adapter.notifyDataSetChanged()
     }
+
+    val editorCollectionActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                val collection: Collection? =
+                    data?.let {
+                        DeprecationManager().getSerializable(
+                            it,
+                            "collection",
+                            Collection::class.java
+                        )
+                    }
+                val intent: String? = data?.getStringExtra("intent")
+
+                if (intent == "update") {
+                    db.collectionDao().update(collection!!)
+                    activity.title = collection.name
+                }
+            }
+        }
 
     val editorItemActivityResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->

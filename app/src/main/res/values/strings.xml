@@ -19,4 +19,6 @@
     <string name="please_add_a_description">Please add a description</string>
     <string name="please_add_a_name">Please add a name</string>
     <string name="select_file">Select File</string>
+    <string name="share">Share</string>
+    <string name="edit">Edit</string>
 </resources>

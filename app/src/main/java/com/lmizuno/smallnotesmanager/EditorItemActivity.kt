@@ -50,6 +50,19 @@ class EditorItemActivity : AppCompatActivity() {
             content.setText(item!!.content)
 
             removeButton.visibility = View.VISIBLE
+
+            removeButton.setOnClickListener {
+                val builder = AlertDialog.Builder(this)
+
+                builder.setMessage(getString(R.string.delete_question) + item!!.title)
+                    .setPositiveButton(getString(R.string.remove)) { dialog, id ->
+                        AppDatabase.getInstance(this).itemDao().delete(item!!)
+                        finish()
+                    }
+                    .setNegativeButton(getString(R.string.cancel)) { dialog, id ->
+                    }
+                builder.create().show()
+            }
         } else {
             removeButton.visibility = View.INVISIBLE
         }
@@ -82,21 +95,6 @@ class EditorItemActivity : AppCompatActivity() {
             intentReturn.putExtra("intent", intent.getStringExtra("intent"))
             setResult(Activity.RESULT_OK, intentReturn)
             finish()
-        }
-
-        if (item != null) {
-            removeButton.setOnClickListener {
-                val builder = AlertDialog.Builder(this)
-
-                builder.setMessage(getString(R.string.delete_question) + item!!.title)
-                    .setPositiveButton(getString(R.string.remove)) { dialog, id ->
-                        AppDatabase.getInstance(this).itemDao().delete(item!!)
-                        finish()
-                    }
-                    .setNegativeButton(getString(R.string.cancel)) { dialog, id ->
-                    }
-                builder.create().show()
-            }
         }
     }
 }
