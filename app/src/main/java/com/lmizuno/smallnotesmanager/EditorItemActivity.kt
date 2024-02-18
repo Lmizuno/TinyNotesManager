@@ -38,7 +38,7 @@ class EditorItemActivity : AppCompatActivity() {
         content.addTextChangedListener(MarkwonEditorTextWatcher.withProcess(editor))
 
         //Set item to update or add
-        var updateMode: Boolean = false
+        var updateMode = false
         if (intent != null && intent.hasExtra("intent")) {
             updateMode = (intent.getStringExtra("intent") != "add")
         }
