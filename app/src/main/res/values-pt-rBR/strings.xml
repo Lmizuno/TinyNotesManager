@@ -18,4 +18,5 @@
     <string name="select_file">Selecione um arquivo</string>
     <string name="share">Compartilhar</string>
     <string name="edit">Modificar</string>
+    <string name="import_collection">Importar</string>
 </resources>

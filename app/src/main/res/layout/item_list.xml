@@ -17,13 +17,12 @@
             android:id="@+id/item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:singleLine="true"
+            android:text="Place Holder"
             android:textAlignment="textStart"
-            android:textColor="@color/black"
+            android:textColor="?attr/font"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="Place Holder"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText" />
     </androidx.constraintlayout.widget.ConstraintLayout>

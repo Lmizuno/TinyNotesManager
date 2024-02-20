@@ -21,4 +21,5 @@
     <string name="select_file">Select File</string>
     <string name="share">Share</string>
     <string name="edit">Edit</string>
+    <string name="import_collection">Import</string>
 </resources>
