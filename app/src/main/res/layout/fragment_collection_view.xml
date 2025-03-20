@@ -15,25 +15,17 @@
         android:layout_height="match_parent"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="55dp" />
+        android:layout_marginBottom="8dp" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_editor_mode"
+
+
+    <com.leinardi.android.speeddial.SpeedDialView
+        android:id="@+id/speedDial_collection_view_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/fab_item"
-        app:backgroundTint="@color/teal_200"
-        app:fabSize="mini"
-        app:layout_anchor="@id/bottomAppBar"
-        app:srcCompat="@drawable/baseline_app_shortcut_24"
-        tools:ignore="ImageContrastCheck" />
+        android:layout_gravity="bottom|end"
+        app:sdMainFabClosedSrc="@drawable/ic_dashboard_black_24dp" />
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:fabAlignmentMode="center"
-        app:menu="@menu/collection_bottom_nav_menu" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

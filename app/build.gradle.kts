@@ -75,4 +75,5 @@ dependencies {
     testImplementation("org.robolectric:robolectric:4.11.1")
     testImplementation("androidx.test.ext:junit:1.1.5")
     testImplementation("io.mockk:mockk:1.13.9")
+    implementation("com.leinardi.android:speed-dial:3.3.0")
 }

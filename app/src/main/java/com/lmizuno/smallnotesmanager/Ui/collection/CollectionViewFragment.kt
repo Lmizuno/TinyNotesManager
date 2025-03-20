@@ -2,18 +2,20 @@ package com.lmizuno.smallnotesmanager.Ui.collection
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.lmizuno.smallnotesmanager.Adapters.ItemListAdapter
 import com.lmizuno.smallnotesmanager.Adapters.ItemMoveCallback
 import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
@@ -73,104 +75,105 @@ class CollectionViewFragment : Fragment() {
 
         activity.title = currentCollection.name
 
+        binding.speedDialCollectionViewMenu.apply {
+            mainFabClosedBackgroundColor = ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme)
+            mainFabClosedIconColor = ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme)
+            
+            addActionItem(
+                SpeedDialActionItem.Builder(R.id.addItemButton, R.drawable.baseline_add_24_white)
+                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
+                    .setLabel("Add Item")
+                    .setLabelColor(Color.WHITE)
+                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                    .create()
+            )
 
-        binding.fabEditorMode.setOnClickListener {
-            if (!editorToggle) {
-                binding.fabEditorMode.setImageResource(R.drawable.baseline_app_settings_alt_24)
-                binding.fabEditorMode.backgroundTintList =
-                    resources.getColorStateList(R.color.yellow_pastel, requireContext().theme)
+            addActionItem(
+                SpeedDialActionItem.Builder(R.id.editCollection, R.drawable.baseline_edit_24)
+                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
+                    .setLabel("Edit Mode")
+                    .setLabelColor(Color.WHITE)
+                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                    .create()
+            )
 
-            } else {
-                binding.fabEditorMode.setImageResource(R.drawable.baseline_app_shortcut_24)
+            addActionItem(
+                SpeedDialActionItem.Builder(R.id.shareCollection, R.drawable.baseline_share_white_24)
+                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
+                    .setLabel("Share Collection")
+                    .setLabelColor(Color.WHITE)
+                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                    .create()
+            )
 
-                binding.fabEditorMode.backgroundTintList =
-                    resources.getColorStateList(R.color.teal_200, requireContext().theme)
-
-                if (adapter.timeOfLastModification != adapter.timeLastUpdated) {
-                    val newList = adapter.itemList
-
-                    newList.forEachIndexed { index, element ->
-                        element.orderN = index.toLong() + 1
-                        db.itemDao().update(element)
+            setOnActionSelectedListener { actionItem ->
+                when (actionItem.id) {
+                    R.id.addItemButton -> {
+                        val intent = Intent(requireContext(), EditorItemActivity::class.java)
+                        intent.putExtra("intent", "add")
+                        editorItemActivityResultLauncher.launch(intent)
+                        close() // Closes the Speed Dial
+                        true // Returns true to keep the Speed Dial open
                     }
+                    R.id.editCollection -> {
+                        removeActionItemById(R.id.editCollection)
+                        if(!editorToggle){
+                            addActionItem(
+                                SpeedDialActionItem.Builder(R.id.editCollection, R.drawable.baseline_edit_off_24)
+                                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
+                                    .setLabel("View Mode")
+                                    .setLabelColor(Color.WHITE)
+                                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                                    .create(), 1
+                            )
+                        }else{
+                            addActionItem(
+                                SpeedDialActionItem.Builder(R.id.editCollection, R.drawable.baseline_edit_24)
+                                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
+                                    .setLabel("Edit Mode")
+                                    .setLabelColor(Color.WHITE)
+                                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                                    .create(), 1
+                            )
+                        }
 
-                    adapter.timeLastUpdated = adapter.timeOfLastModification
-                }
-            }
-
-            editorToggle = !editorToggle
-            adapter.setEditorToggle(editorToggle)
-        }
-
-        binding.bottomAppBar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.addItemButton -> {
-                    val intent = Intent(requireContext(), EditorItemActivity::class.java)
-                    intent.putExtra("intent", "add")
-                    editorItemActivityResultLauncher.launch(intent)
-
-                    true
-                }
-
-                R.id.shareCollection -> {
-                    val file: File = Sharing().saveToFile(currentCollection, requireContext())
-
-                    val uri: Uri = FileProvider.getUriForFile(
-                        requireContext(),
-                        "com.smallnotesmanager.fileprovider",
-                        file,
-                    )
-
-                    val shareIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_STREAM, uri)
-                        type = "application/octet-stream"
+                        editorToggle = !editorToggle
+                        adapter.setEditorToggle(editorToggle)
+                        close()
+                        false
                     }
+                    R.id.shareCollection -> {
+                        val file: File = Sharing().saveToFile(currentCollection, requireContext())
 
-                    startActivity(
-                        Intent.createChooser(
-                            shareIntent,
-                            "Share ${currentCollection.name}"
-                        )
-                    )
-
-                    true
-                }
-
-//                R.id.downloadCollection -> {
-//                    //TODO: create a way to download as PDF
-//                    true
-//                }
-
-                R.id.deleteCollection -> {
-                    //Open Dialog
-                    DeleteDialogFragment("Do you want to delete ${currentCollection.name}?", {
-                        // Delete
-                        Toast.makeText(
+                        val uri: Uri = FileProvider.getUriForFile(
                             requireContext(),
-                            "Deleting ${currentCollection.name}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        db.collectionDao().deleteCollectionAndItems(currentCollection)
+                            "com.smallnotesmanager.fileprovider",
+                            file,
+                        )
 
-                        activity.supportFragmentManager.popBackStack()
-                    }, {
-                        // Cancel
-                    }).show(activity.supportFragmentManager, "DELETE_DIALOG")
+                        val shareIntent: Intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_STREAM, uri)
+                            type = "application/octet-stream"
+                        }
 
-                    true
+                        startActivity(
+                            Intent.createChooser(
+                                shareIntent,
+                                "Share ${currentCollection.name}"
+                            )
+                        )
+
+                        close()
+                        true
+                    }
+                    else -> false
                 }
-
-                R.id.editCollection -> {
-                    val intent = Intent(requireContext(), EditorCollectionActivity::class.java)
-                    intent.putExtra("intent", "update")
-                    intent.putExtra("collection", currentCollection)
-                    editorCollectionActivityResultLauncher.launch(intent)
-
-                    true
-                }
-
-                else -> false
             }
         }
 
