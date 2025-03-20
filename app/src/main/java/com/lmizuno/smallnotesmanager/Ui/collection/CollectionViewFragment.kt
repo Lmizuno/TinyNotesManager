@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
@@ -91,7 +92,7 @@ class CollectionViewFragment : Fragment() {
 
             addActionItem(
                 SpeedDialActionItem.Builder(R.id.editCollection, R.drawable.baseline_edit_24)
-                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.yellow_pastel, requireActivity().theme))
                     .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
                     .setLabel("Edit Mode")
                     .setLabelColor(Color.WHITE)
@@ -101,9 +102,19 @@ class CollectionViewFragment : Fragment() {
 
             addActionItem(
                 SpeedDialActionItem.Builder(R.id.shareCollection, R.drawable.baseline_share_white_24)
-                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.teal_200, requireActivity().theme))
                     .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
                     .setLabel("Share Collection")
+                    .setLabelColor(Color.WHITE)
+                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                    .create()
+            )
+
+            addActionItem(
+                SpeedDialActionItem.Builder(R.id.deleteCollection, R.drawable.recycle_bin_icon)
+                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.red, requireActivity().theme))
+                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
+                    .setLabel("Delete Collection")
                     .setLabelColor(Color.WHITE)
                     .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
                     .create()
@@ -133,11 +144,11 @@ class CollectionViewFragment : Fragment() {
                         }else{
                             addActionItem(
                                 SpeedDialActionItem.Builder(R.id.editCollection, R.drawable.baseline_edit_24)
-                                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.yellow_pastel, requireActivity().theme))
                                     .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
                                     .setLabel("Edit Mode")
                                     .setLabelColor(Color.WHITE)
-                                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
+                                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.yellow_pastel, requireActivity().theme))
                                     .create(), 1
                             )
                         }
@@ -146,6 +157,24 @@ class CollectionViewFragment : Fragment() {
                         adapter.setEditorToggle(editorToggle)
                         close()
                         false
+                    }
+                    R.id.deleteCollection -> {
+                        //Open Dialog
+                        DeleteDialogFragment("Do you want to delete ${currentCollection.name}?", {
+                            // Delete
+                            Toast.makeText(
+                                requireContext(),
+                                "Deleting ${currentCollection.name}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            db.collectionDao().deleteCollectionAndItems(currentCollection)
+
+                            activity.supportFragmentManager.popBackStack()
+                        }, {
+                            // Cancel
+                        }).show(activity.supportFragmentManager, "DELETE_DIALOG")
+
+                        true
                     }
                     R.id.shareCollection -> {
                         val file: File = Sharing().saveToFile(currentCollection, requireContext())
