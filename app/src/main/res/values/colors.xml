@@ -41,13 +41,13 @@
 
     <!-- DARK THEME -->
     <!-- PRIMARY COLOR SETTINGS -->
-    <color name="primary_dark">#031B29</color>
-    <color name="primary_variant_dark">#03232E</color>
+    <color name="primary_dark">#306788</color>
+    <color name="primary_variant_dark">#184859</color>
     <color name="color_on_primary_dark">#FFFFFFFF</color>
 
     <!-- SECONDARY COLOR SETTINGS -->
-    <color name="secondary_dark">#4A090E</color>
-    <color name="secondary_variant_dark">#430816</color>
+    <color name="secondary_dark">#88353C</color>
+    <color name="secondary_variant_dark">#4E1220</color>
     <color name="color_on_secondary_dark">#FFFFFFFF</color>
 
 </resources>

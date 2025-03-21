@@ -76,4 +76,5 @@ dependencies {
     testImplementation("androidx.test.ext:junit:1.1.5")
     testImplementation("io.mockk:mockk:1.13.9")
     implementation("com.leinardi.android:speed-dial:3.3.0")
+    implementation("androidx.preference:preference-ktx:1.2.1")
 }

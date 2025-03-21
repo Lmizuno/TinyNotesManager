@@ -20,7 +20,6 @@ import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.lmizuno.smallnotesmanager.Adapters.ItemListAdapter
 import com.lmizuno.smallnotesmanager.Adapters.ItemMoveCallback
 import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
-import com.lmizuno.smallnotesmanager.EditorCollectionActivity
 import com.lmizuno.smallnotesmanager.EditorItemActivity
 import com.lmizuno.smallnotesmanager.Listeners.ItemsClickListener
 import com.lmizuno.smallnotesmanager.MainActivity
@@ -43,9 +42,7 @@ class CollectionViewFragment : Fragment() {
     lateinit var currentCollection: Collection
     var editorToggle: Boolean = false
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCollectionViewBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -65,59 +62,112 @@ class CollectionViewFragment : Fragment() {
 
         db = AppDatabase.getInstance(requireContext())
 
-        currentCollection =
-            arguments?.let {
-                DeprecationManager().getSerializable(
-                    it,
-                    "collection",
-                    Collection::class.java
-                )
-            }!!
+        currentCollection = arguments?.let {
+            DeprecationManager().getSerializable(
+                it, "collection", Collection::class.java
+            )
+        }!!
 
         activity.title = currentCollection.name
 
         binding.speedDialCollectionViewMenu.apply {
-            mainFabClosedBackgroundColor = ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme)
-            mainFabClosedIconColor = ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme)
-            
+            mainFabClosedIconColor =
+                ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme)
+
             addActionItem(
                 SpeedDialActionItem.Builder(R.id.addItemButton, R.drawable.baseline_add_24_white)
-                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
-                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
-                    .setLabel("Add Item")
-                    .setLabelColor(Color.WHITE)
-                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
-                    .create()
+                    .setFabBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.primary,
+                            requireActivity().theme
+                        )
+                    ).setFabImageTintColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.white,
+                            requireActivity().theme
+                        )
+                    ).setLabel("Add Item").setLabelColor(Color.WHITE).setLabelBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.primary,
+                            requireActivity().theme
+                        )
+                    ).create()
             )
 
             addActionItem(
                 SpeedDialActionItem.Builder(R.id.editCollection, R.drawable.baseline_edit_24)
-                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.yellow_pastel, requireActivity().theme))
-                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
-                    .setLabel("Edit Mode")
-                    .setLabelColor(Color.WHITE)
-                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
-                    .create()
+                    .setFabBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.yellow_pastel,
+                            requireActivity().theme
+                        )
+                    ).setFabImageTintColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.white,
+                            requireActivity().theme
+                        )
+                    ).setLabel("Edit Mode").setLabelColor(Color.WHITE).setLabelBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.primary,
+                            requireActivity().theme
+                        )
+                    ).create()
             )
 
             addActionItem(
-                SpeedDialActionItem.Builder(R.id.shareCollection, R.drawable.baseline_share_white_24)
-                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.teal_200, requireActivity().theme))
-                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
-                    .setLabel("Share Collection")
-                    .setLabelColor(Color.WHITE)
-                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
-                    .create()
+                SpeedDialActionItem.Builder(
+                    R.id.shareCollection,
+                    R.drawable.baseline_share_white_24
+                ).setFabBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.teal_200,
+                            requireActivity().theme
+                        )
+                    ).setFabImageTintColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.white,
+                            requireActivity().theme
+                        )
+                    ).setLabel("Share Collection").setLabelColor(Color.WHITE)
+                    .setLabelBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.primary,
+                            requireActivity().theme
+                        )
+                    ).create()
             )
 
             addActionItem(
                 SpeedDialActionItem.Builder(R.id.deleteCollection, R.drawable.recycle_bin_icon)
-                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.red, requireActivity().theme))
-                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
-                    .setLabel("Delete Collection")
-                    .setLabelColor(Color.WHITE)
-                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
-                    .create()
+                    .setFabBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.red,
+                            requireActivity().theme
+                        )
+                    ).setFabImageTintColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.white,
+                            requireActivity().theme
+                        )
+                    ).setLabel("Delete Collection").setLabelColor(Color.WHITE)
+                    .setLabelBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.primary,
+                            requireActivity().theme
+                        )
+                    ).create()
             )
 
             setOnActionSelectedListener { actionItem ->
@@ -129,27 +179,60 @@ class CollectionViewFragment : Fragment() {
                         close() // Closes the Speed Dial
                         true // Returns true to keep the Speed Dial open
                     }
+
                     R.id.editCollection -> {
                         removeActionItemById(R.id.editCollection)
-                        if(!editorToggle){
+                        if (!editorToggle) {
                             addActionItem(
-                                SpeedDialActionItem.Builder(R.id.editCollection, R.drawable.baseline_edit_off_24)
-                                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
-                                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
-                                    .setLabel("View Mode")
-                                    .setLabelColor(Color.WHITE)
-                                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, requireActivity().theme))
-                                    .create(), 1
+                                SpeedDialActionItem.Builder(
+                                    R.id.editCollection,
+                                    R.drawable.baseline_edit_off_24
+                                ).setFabBackgroundColor(
+                                        ResourcesCompat.getColor(
+                                            resources,
+                                            R.color.primary,
+                                            requireActivity().theme
+                                        )
+                                    ).setFabImageTintColor(
+                                        ResourcesCompat.getColor(
+                                            resources,
+                                            R.color.white,
+                                            requireActivity().theme
+                                        )
+                                    ).setLabel("View Mode").setLabelColor(Color.WHITE)
+                                    .setLabelBackgroundColor(
+                                        ResourcesCompat.getColor(
+                                            resources,
+                                            R.color.primary,
+                                            requireActivity().theme
+                                        )
+                                    ).create(), 1
                             )
-                        }else{
+                        } else {
                             addActionItem(
-                                SpeedDialActionItem.Builder(R.id.editCollection, R.drawable.baseline_edit_24)
-                                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.yellow_pastel, requireActivity().theme))
-                                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, requireActivity().theme))
-                                    .setLabel("Edit Mode")
-                                    .setLabelColor(Color.WHITE)
-                                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.yellow_pastel, requireActivity().theme))
-                                    .create(), 1
+                                SpeedDialActionItem.Builder(
+                                    R.id.editCollection,
+                                    R.drawable.baseline_edit_24
+                                ).setFabBackgroundColor(
+                                        ResourcesCompat.getColor(
+                                            resources,
+                                            R.color.yellow_pastel,
+                                            requireActivity().theme
+                                        )
+                                    ).setFabImageTintColor(
+                                        ResourcesCompat.getColor(
+                                            resources,
+                                            R.color.white,
+                                            requireActivity().theme
+                                        )
+                                    ).setLabel("Edit Mode").setLabelColor(Color.WHITE)
+                                    .setLabelBackgroundColor(
+                                        ResourcesCompat.getColor(
+                                            resources,
+                                            R.color.yellow_pastel,
+                                            requireActivity().theme
+                                        )
+                                    ).create(), 1
                             )
                         }
 
@@ -158,6 +241,7 @@ class CollectionViewFragment : Fragment() {
                         close()
                         false
                     }
+
                     R.id.deleteCollection -> {
                         //Open Dialog
                         DeleteDialogFragment("Do you want to delete ${currentCollection.name}?", {
@@ -176,6 +260,7 @@ class CollectionViewFragment : Fragment() {
 
                         true
                     }
+
                     R.id.shareCollection -> {
                         val file: File = Sharing().saveToFile(currentCollection, requireContext())
 
@@ -193,14 +278,14 @@ class CollectionViewFragment : Fragment() {
 
                         startActivity(
                             Intent.createChooser(
-                                shareIntent,
-                                "Share ${currentCollection.name}"
+                                shareIntent, "Share ${currentCollection.name}"
                             )
                         )
 
                         close()
                         true
                     }
+
                     else -> false
                 }
             }
@@ -232,14 +317,11 @@ class CollectionViewFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data: Intent? = result.data
-                val collection: Collection? =
-                    data?.let {
-                        DeprecationManager().getSerializable(
-                            it,
-                            "collection",
-                            Collection::class.java
-                        )
-                    }
+                val collection: Collection? = data?.let {
+                    DeprecationManager().getSerializable(
+                        it, "collection", Collection::class.java
+                    )
+                }
                 val intent: String? = data?.getStringExtra("intent")
 
                 if (intent == "update") {
