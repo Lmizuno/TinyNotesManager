@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace = "com.lmizuno.smallnotesmanager"
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         applicationId = "com.lmizuno.smallnotesmanager"
-        minSdk = 30
-        targetSdk = 34
+        minSdk = 28
+        targetSdk = 35
         versionCode = 120
         versionName = "1.2.0"
 
