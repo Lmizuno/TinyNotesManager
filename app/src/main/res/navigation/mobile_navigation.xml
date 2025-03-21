@@ -32,4 +32,13 @@
         android:name="com.lmizuno.smallnotesmanager.Ui.collection.CollectionViewFragment"
         android:label="@string/title_collectionView"
         tools:layout="@layout/fragment_collection_view" />
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.lmizuno.smallnotesmanager.Ui.settings.SettingsFragment"
+        android:label="Settings" />
+
+    <action
+        android:id="@+id/action_navigation_home_to_settingsFragment"
+        app:destination="@id/settingsFragment" />
 </navigation>

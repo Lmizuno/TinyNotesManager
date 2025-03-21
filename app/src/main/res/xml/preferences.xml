@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fitsSystemWindows="true">
+
+    <PreferenceCategory android:title="General">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="dark_mode"
+            android:summary="@string/theme_mode_toggle"
+            android:title="@string/dark_mode" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/about">
+        <Preference
+            android:key="app_version"
+            android:summary="1.0.0"
+            android:title="@string/app_version" />
+
+        <Preference
+            android:key="app_developer"
+            android:summary="Lmizuno"
+            android:title="@string/developer" />
+
+        <Preference
+            android:key="contact_email"
+            android:summary="lmizunodevelopment@gmail.com"
+            android:title="@string/contact">
+            <intent
+                android:action="android.intent.action.SENDTO"
+                android:data="mailto:lmizunodevelopment@gmail.com" />
+        </Preference>
+
+        <Preference
+            android:key="github_repo"
+            android:summary="@string/view_source_code"
+            android:title="@string/github_repo">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://github.com/Lmizuno/TinyNotesManager" />
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen> 
