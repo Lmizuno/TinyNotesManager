@@ -77,4 +77,10 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.9")
     implementation("com.leinardi.android:speed-dial:3.3.0")
     implementation("androidx.preference:preference-ktx:1.2.1")
+    // Couchbase Lite
+    implementation("com.couchbase.lite:couchbase-lite-android-ktx:3.0.0")
+    
+    // Coroutines for async operations
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 }
