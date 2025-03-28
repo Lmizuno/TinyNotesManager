@@ -86,4 +86,24 @@ class Note(
             parentId?.let { this["parent"] = it }
         }
     }
+}
+
+object NodeFactory {
+    fun fromDocument(document: com.couchbase.lite.Document): Node? {
+        val id = document.getString("id") ?: return null
+        val name = document.getString("name") ?: return null
+        val parentId = document.getString("parent").takeIf { it?.isNotEmpty() ?: false }
+        val createdAt = document.getLong("createdAt") ?: System.currentTimeMillis()
+        val updatedAt = document.getLong("updatedAt") ?: System.currentTimeMillis()
+        val type = document.getString("type") ?: return null
+        
+        return when (type) {
+            "Folder" -> Folder(id, name, parentId, createdAt, updatedAt)
+            "Note" -> {
+                val content = document.getString("content") ?: ""
+                Note(id, name, parentId, createdAt, updatedAt, content)
+            }
+            else -> null
+        }
+    }
 } 
