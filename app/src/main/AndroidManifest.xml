@@ -36,13 +36,26 @@
             android:theme="@style/Theme.SmallNotesManager.NoActionBar" />
         <activity
             android:name=".MainActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".NodeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:name=".EditorFolderActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmallNotesManager.NoActionBar" />
+        <activity
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            android:name=".EditorNoteActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmallNotesManager.NoActionBar" />
     </application>
 
 </manifest>
