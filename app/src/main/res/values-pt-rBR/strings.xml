@@ -11,7 +11,7 @@
     <string name="content">Conteúdo</string>
     <string name="title">Título</string>
     <string name="remove">Deletar</string>
-    <string name="delete_question">"Deseja remover: "</string>
+    <string name="delete_question">Deseja remover: </string>
     <string name="cancel">Cancelar</string>
     <string name="please_add_a_description">Adicione uma descrição</string>
     <string name="please_add_a_name">Adicione um nome</string>
@@ -29,4 +29,6 @@
     <string name="contact">Contato</string>
     <string name="github_repo">Github</string>
     <string name="view_source_code">Veja o código fonte</string>
+    <string name="error_saving">Erro ao salvar pasta</string>
+    <string name="add_folder">Criar pasta</string>
 </resources>

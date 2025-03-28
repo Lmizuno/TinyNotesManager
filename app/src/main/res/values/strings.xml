@@ -32,4 +32,6 @@
     <string name="contact">Contact</string>
     <string name="github_repo">Github Repo</string>
     <string name="view_source_code">View source code</string>
+    <string name="error_saving">"Error saving folder, please try again. "</string>
+    <string name="add_folder">Add folder</string>
 </resources>
