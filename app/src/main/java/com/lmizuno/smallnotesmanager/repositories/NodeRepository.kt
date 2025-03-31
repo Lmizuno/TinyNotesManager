@@ -37,14 +37,15 @@ class NodeRepository(context: Context) {
      */
     suspend fun saveNode(node: Node): Boolean = withContext(Dispatchers.IO) {
         try {
-            // Create document ID with type prefix
+            // Get the node type
             val type = when (node) {
                 is Folder -> NodeType.FOLDER
                 is Note -> NodeType.NOTE
                 else -> throw IllegalArgumentException("Unsupported node type")
             }.name
             
-            val docId = "$type::${node.id}"
+            // Use pure ID without prefix
+            val docId = node.id
             
             val properties = node.toMap().toMutableMap().apply {
                 // Make sure type is set properly for storage
@@ -79,7 +80,8 @@ class NodeRepository(context: Context) {
                 else -> throw IllegalArgumentException("Unsupported node type")
             }.name
             
-            val docId = "$type::${node.id}"
+            // Use pure ID without prefix
+            val docId = node.id
             
             database.getDocument(docId)?.let { doc ->
                 val mutableDoc = doc.toMutable()
@@ -88,6 +90,9 @@ class NodeRepository(context: Context) {
                 properties.forEach { (key, value) -> 
                     mutableDoc.setValue(key, value)
                 }
+                
+                // Ensure type is consistent
+                mutableDoc.setValue("type", type)
                 
                 database.save(mutableDoc)
                 Log.d(TAG, "Updated document: $docId")
@@ -107,23 +112,13 @@ class NodeRepository(context: Context) {
      */
     suspend fun getNode(id: String): Node? = withContext(Dispatchers.IO) {
         try {
-            // We need to try both document ID formats since we don't know the type
-            val folderDocId = "${NodeType.FOLDER.name}::$id"
-            val noteDocId = "${NodeType.NOTE.name}::$id"
-            
-            // Try to get folder document first
-            database.getDocument(folderDocId)?.let { doc ->
-                return@withContext NodeFactory.fromDocument(doc)
+            // Simply get document by its ID
+            database.getDocument(id)?.let { doc ->
+                NodeFactory.fromDocument(doc)
+            } ?: run {
+                Log.e(TAG, "Document not found for ID: $id")
+                null
             }
-            
-            // If not found, try note document
-            database.getDocument(noteDocId)?.let { doc ->
-                return@withContext NodeFactory.fromDocument(doc)
-            }
-            
-            // If we get here, document wasn't found
-            Log.e(TAG, "Document not found for ID: $id")
-            null
         } catch (e: Exception) {
             Log.e(TAG, "Failed to get node: $id", e)
             null
@@ -208,11 +203,7 @@ class NodeRepository(context: Context) {
             query.execute().allResults().mapNotNull { result ->
                 val docId = result.getDictionary(0)?.getString("id") ?: return@mapNotNull null
                 
-                // Determine the document type to construct the full ID
-                val typeStr = result.getDictionary(0)?.getString("type") ?: return@mapNotNull null
-                val fullDocId = "$typeStr::$docId"
-                
-                database.getDocument(fullDocId)?.let { doc ->
+                database.getDocument(docId)?.let { doc ->
                     NodeFactory.fromDocument(doc)
                 }
             }.also { nodes ->
@@ -229,11 +220,15 @@ class NodeRepository(context: Context) {
      */
     suspend fun deleteNode(id: String): Boolean = withContext(Dispatchers.IO) {
         try {
+            // Simply get and delete document by its ID
             database.getDocument(id)?.let { doc ->
                 database.delete(doc)
                 Log.d(TAG, "Deleted document: $id")
                 true
-            } ?: false
+            } ?: run {
+                Log.e(TAG, "Document not found for deletion: $id")
+                false
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to delete node: $id", e)
             false
