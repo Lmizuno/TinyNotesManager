@@ -4,27 +4,24 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.lmizuno.smallnotesmanager.DBManager.CouchbaseManager
 import com.lmizuno.smallnotesmanager.databinding.ActivityNodeBinding
-import com.lmizuno.smallnotesmanager.models.Node
-import com.lmizuno.smallnotesmanager.models.NodeFactory
+import com.lmizuno.smallnotesmanager.Models.Folder
 import com.lmizuno.smallnotesmanager.Adapters.NodeAdapter
 import com.leinardi.android.speeddial.SpeedDialActionItem
-import com.lmizuno.smallnotesmanager.models.Folder
-import kotlinx.coroutines.launch
 import androidx.activity.result.contract.ActivityResultContracts
 import android.app.Activity
-import android.util.Log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.lmizuno.smallnotesmanager.Models.Node
+import com.lmizuno.smallnotesmanager.viewmodels.NodeViewModel
 
 class NodeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNodeBinding
-    private lateinit var dbManager: CouchbaseManager
+    private lateinit var viewModel: NodeViewModel
     private var parentId: String? = null
     private lateinit var nodeAdapter: NodeAdapter
 
@@ -32,7 +29,7 @@ class NodeActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            loadNodes() // Refresh the list
+            viewModel.loadNodes(parentId) // Refresh the list using ViewModel
         }
     }
 
@@ -51,13 +48,16 @@ class NodeActivity : AppCompatActivity() {
         binding = ActivityNodeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize CouchbaseManager
-        dbManager = CouchbaseManager.getInstance(this)
+        // Initialize ViewModel
+        viewModel = ViewModelProvider(this)[NodeViewModel::class.java]
         
         parentId = intent.getStringExtra(EXTRA_PARENT_ID)
         setupRecyclerView()
         setupSpeedDial()
-        loadNodes()
+        setupObservers()
+        
+        // Load nodes
+        viewModel.loadNodes(parentId)
     }
 
     private fun setupRecyclerView() {
@@ -76,6 +76,26 @@ class NodeActivity : AppCompatActivity() {
         binding.recyclerNodes.adapter = nodeAdapter
     }
 
+    private fun setupObservers() {
+        // Observe nodes LiveData
+        viewModel.nodes.observe(this) { nodes ->
+            updateUI(nodes)
+        }
+        
+        // Observe loading state
+//        viewModel.loading.observe(this) { isLoading ->
+//            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+//        }
+        
+        // Observe errors
+        viewModel.error.observe(this) { errorMsg ->
+            errorMsg?.let {
+                Toast.makeText(this, it, Toast.LENGTH_LONG).show()
+                viewModel.clearError()
+            }
+        }
+    }
+
     private fun setupSpeedDial() {
         binding.speedDial.apply {
             addActionItem(
@@ -83,6 +103,16 @@ class NodeActivity : AppCompatActivity() {
                     .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, theme))
                     .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, theme))
                     .setLabel("Add Folder")
+                    .setLabelColor(Color.WHITE)
+                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, theme))
+                    .create()
+            )
+
+            addActionItem(
+                SpeedDialActionItem.Builder(R.id.fab_add_note, R.drawable.baseline_edit_square_24)
+                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, theme))
+                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, theme))
+                    .setLabel("Add Note")
                     .setLabelColor(Color.WHITE)
                     .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, theme))
                     .create()
@@ -97,26 +127,15 @@ class NodeActivity : AppCompatActivity() {
                         close()
                         true
                     }
+                    R.id.fab_add_note -> {
+                        editorActivityResult.launch(
+                            EditorNoteActivity.createIntent(this@NodeActivity, parentId = parentId)
+                        )
+                        close()
+                        true
+                    }
                     else -> false
                 }
-            }
-        }
-    }
-
-    private fun loadNodes() {
-        lifecycleScope.launch {
-            try {
-                val documents = dbManager.queryByParent(parentId)
-                val nodes = documents.mapNotNull { doc ->
-                    NodeFactory.fromDocument(doc)
-                }
-
-                withContext(Dispatchers.Main) {
-                    updateUI(nodes)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                // TODO: Handle error
             }
         }
     }
@@ -125,10 +144,5 @@ class NodeActivity : AppCompatActivity() {
         supportActionBar?.title = if (parentId == null) "Root" else "Folder"
         binding.textNodeCount.text = "Found ${nodes.size} items"
         nodeAdapter.updateNodes(nodes)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        loadNodes() // Refresh when returning to this activity
     }
 } 

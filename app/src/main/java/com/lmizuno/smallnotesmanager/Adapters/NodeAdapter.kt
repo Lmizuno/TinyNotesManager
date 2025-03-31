@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.lmizuno.smallnotesmanager.R
 import com.lmizuno.smallnotesmanager.databinding.ItemNodeBinding
-import com.lmizuno.smallnotesmanager.models.Folder
-import com.lmizuno.smallnotesmanager.models.Node
+import com.lmizuno.smallnotesmanager.Models.Folder
+import com.lmizuno.smallnotesmanager.Models.Node
 
 class NodeAdapter(
     private var nodes: List<Node>,
@@ -19,12 +19,22 @@ class NodeAdapter(
         
         fun bind(node: Node, onNodeClick: (Node) -> Unit) {
             binding.textName.text = node.name
-            binding.iconType.setImageResource(
-                when (node) {
-                    is Folder -> R.drawable.baseline_folder_24
-                    else -> R.drawable.baseline_edit_square_24
-                }
-            )
+            
+            // Set icon and color
+            binding.iconType.apply {
+                setImageResource(
+                    when (node) {
+                        is Folder -> R.drawable.baseline_folder_24
+                        else -> R.drawable.baseline_edit_square_24
+                    }
+                )
+                // Set icon color to secondary
+                setColorFilter(
+                    context.getColor(R.color.primary),
+                    android.graphics.PorterDuff.Mode.SRC_IN
+                )
+            }
+            
             binding.root.setOnClickListener { onNodeClick(node) }
         }
     }

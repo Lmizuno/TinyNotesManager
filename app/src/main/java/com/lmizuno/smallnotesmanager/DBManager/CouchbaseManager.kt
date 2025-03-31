@@ -2,13 +2,13 @@ package com.lmizuno.smallnotesmanager.DBManager
 
 import android.content.Context
 import com.couchbase.lite.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import android.util.Log
 
 /**
  * Author: Luis Henrique Mizuno
  * Date: 2025-03-27
+ * 
+ * Handles database initialization and provides access to the database instance.
  */
 class CouchbaseManager private constructor(context: Context) {
     private val database: Database
@@ -43,6 +43,8 @@ class CouchbaseManager private constructor(context: Context) {
     }
     
     companion object {
+        private const val TAG = "CouchbaseManager"
+        
         @Volatile
         private var instance: CouchbaseManager? = null
         
@@ -53,89 +55,8 @@ class CouchbaseManager private constructor(context: Context) {
         }
     }
 
-    suspend fun saveDocument(properties: Map<String, Any>): Document? = withContext(Dispatchers.IO) {
-        try {
-            // Create document ID with type prefix
-            val type = properties["type"] as String
-            val id = properties["id"] as String
-            val docId = "$type::$id"
-            
-            val mutableDoc = MutableDocument(docId, properties)
-            database.save(mutableDoc)
-            
-            Log.d("CouchbaseManager", """
-                Saved document:
-                - ID: $docId
-                - Type: $type
-                - Name: ${properties["name"]}
-            """.trimIndent())
-            
-            database.getDocument(docId)
-        } catch (e: Exception) {
-            Log.e("CouchbaseManager", "Failed to save document", e)
-            null
-        }
-    }
-
-    suspend fun getDocument(id: String): Document? = withContext(Dispatchers.IO) {
-        try {
-            database.getDocument(id)?.also {
-                Log.d("CouchbaseManager", "Retrieved document: $id")
-            }
-        } catch (e: Exception) {
-            Log.e("CouchbaseManager", "Failed to get document: $id", e)
-            null
-        }
-    }
-
-    suspend fun updateDocument(id: String, properties: Map<String, Any>): Boolean = withContext(Dispatchers.IO) {
-        try {
-            database.getDocument(id)?.let { doc ->
-                val mutableDoc = doc.toMutable()
-                properties.forEach { (key, value) -> mutableDoc.setValue(key, value) }
-                database.save(mutableDoc)
-                Log.d("CouchbaseManager", "Updated document: $id")
-                true
-            } ?: false
-        } catch (e: Exception) {
-            Log.e("CouchbaseManager", "Failed to update document: $id", e)
-            false
-        }
-    }
-
-    suspend fun queryByParent(parentId: String?): List<Document> = withContext(Dispatchers.IO) {
-        try {
-            val query = if (parentId == null) {
-                QueryBuilder
-                    .select(SelectResult.all())
-                    .from(DataSource.database(database))
-                    .where(Expression.property("parent").isNotValued())
-            } else {
-                QueryBuilder
-                    .select(SelectResult.all())
-                    .from(DataSource.database(database))
-                    .where(Expression.property("parent").equalTo(Expression.string(parentId)))
-            }
-
-            Log.d("CouchbaseManager", """
-                Executing parent query:
-                - Parent ID: ${parentId ?: "ROOT"}
-                - Database size: ${database.count}
-            """.trimIndent())
-
-            query.execute().allResults().mapNotNull { result ->
-                result.getDictionary(0)?.getString("id")?.let { id ->
-                    database.getDocument(id)
-                }
-            }.also { docs ->
-                Log.d("CouchbaseManager", "Query returned ${docs.size} documents")
-            }
-        } catch (e: Exception) {
-            Log.e("CouchbaseManager", "Failed to query documents", e)
-            emptyList()
-        }
-    }
-
+    fun getDatabase(): Database = database
+    
     fun close() {
         try {
             database.close()

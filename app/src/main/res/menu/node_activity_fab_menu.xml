@@ -5,4 +5,10 @@
         android:icon="@drawable/baseline_add_circle_outline_24"
         android:title="@string/add_folder"
          />
+
+    <item
+        android:id="@+id/fab_add_note"
+        android:icon="@drawable/baseline_add_circle_outline_24"
+        android:title="@string/add_note"
+        />
 </menu>

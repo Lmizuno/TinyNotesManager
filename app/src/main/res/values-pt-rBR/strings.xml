@@ -30,5 +30,6 @@
     <string name="github_repo">Github</string>
     <string name="view_source_code">Veja o código fonte</string>
     <string name="error_saving">Erro ao salvar pasta</string>
-    <string name="add_folder">Criar pasta</string>
+    <string name="add_folder">Criar Pasta</string>
+    <string name="add_note">Nova Anotação</string>
 </resources>
