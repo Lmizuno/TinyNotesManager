@@ -1,6 +1,7 @@
 package com.lmizuno.smallnotesmanager.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,31 +9,30 @@ import androidx.lifecycle.viewModelScope
 import com.lmizuno.smallnotesmanager.Models.Node
 import com.lmizuno.smallnotesmanager.repositories.NodeRepository
 import kotlinx.coroutines.launch
-import android.util.Log
 
 class NodeViewModel(application: Application) : AndroidViewModel(application) {
     private val nodeRepository = NodeRepository.getInstance(application)
-    
+
     private val _nodes = MutableLiveData<List<Node>>()
     val nodes: LiveData<List<Node>> = _nodes
-    
+
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
-    
+
     private val _error = MutableLiveData<String?>()
     val error: LiveData<String?> = _error
-    
+
     companion object {
         private const val TAG = "NodeViewModel"
     }
-    
+
     /**
      * Loads nodes for the given parent ID
      */
     fun loadNodes(parentId: String?) {
         _loading.value = true
         _error.value = null
-        
+
         viewModelScope.launch {
             try {
                 val results = nodeRepository.queryNodesByParent(parentId)
@@ -45,15 +45,20 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-    
+
     /**
      * Creates a new folder
      */
-    fun createFolder(name: String, description: String, parentId: String?, onComplete: (Boolean) -> Unit) {
+    fun createFolder(
+        name: String,
+        description: String,
+        parentId: String?,
+        onComplete: (Boolean) -> Unit
+    ) {
         viewModelScope.launch {
             try {
                 val folder = nodeRepository.createFolder(name, description, parentId)
-                
+
                 if (folder != null) {
                     // Refresh the node list
                     loadNodes(parentId)
@@ -69,15 +74,20 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-    
+
     /**
      * Creates a new note
      */
-    fun createNote(name: String, content: String, parentId: String?, onComplete: (Boolean) -> Unit) {
+    fun createNote(
+        name: String,
+        content: String,
+        parentId: String?,
+        onComplete: (Boolean) -> Unit
+    ) {
         viewModelScope.launch {
             try {
                 val note = nodeRepository.createNote(name, content, parentId)
-                
+
                 if (note != null) {
                     // Refresh the node list
                     loadNodes(parentId)
@@ -93,7 +103,7 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-    
+
     /**
      * Updates an existing node
      */
@@ -101,7 +111,7 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 val success = nodeRepository.updateNode(node)
-                
+
                 if (success) {
                     // Refresh the node list
                     loadNodes(node.parentId)
@@ -117,7 +127,7 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-    
+
     /**
      * Deletes a node
      */
@@ -125,7 +135,7 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 val success = nodeRepository.deleteNode(nodeId)
-                
+
                 if (success) {
                     // Refresh the node list
                     loadNodes(parentId)
@@ -141,14 +151,14 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-    
+
     /**
      * Clears any error state
      */
     fun clearError() {
         _error.value = null
     }
-    
+
     /**
      * Gets a single node by ID
      */

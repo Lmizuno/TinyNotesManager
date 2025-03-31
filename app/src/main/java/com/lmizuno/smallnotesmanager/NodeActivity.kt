@@ -64,11 +64,11 @@ class NodeActivity : AppCompatActivity() {
         nodeAdapter = NodeAdapter(emptyList()) { node ->
             when (node) {
                 is Folder -> {
-                    // Launch new NodeActivity with this folder's ID
                     startActivity(createIntent(this, node.id))
                 }
                 else -> {
-                    // TODO: Handle note click
+                    editorActivityResult.launch(
+                        EditorNoteActivity.createIntent(this, noteId = node.id, parentId = parentId))
                 }
             }
         }
@@ -98,6 +98,9 @@ class NodeActivity : AppCompatActivity() {
 
     private fun setupSpeedDial() {
         binding.speedDial.apply {
+            mainFabClosedIconColor =
+                ResourcesCompat.getColor(resources, R.color.white, theme)
+
             addActionItem(
                 SpeedDialActionItem.Builder(R.id.fab_add_folder, R.drawable.baseline_folder_24)
                     .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, theme))

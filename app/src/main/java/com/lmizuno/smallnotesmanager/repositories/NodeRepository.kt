@@ -107,9 +107,23 @@ class NodeRepository(context: Context) {
      */
     suspend fun getNode(id: String): Node? = withContext(Dispatchers.IO) {
         try {
-            database.getDocument(id)?.let { doc ->
-                NodeFactory.fromDocument(doc)
+            // We need to try both document ID formats since we don't know the type
+            val folderDocId = "${NodeType.FOLDER.name}::$id"
+            val noteDocId = "${NodeType.NOTE.name}::$id"
+            
+            // Try to get folder document first
+            database.getDocument(folderDocId)?.let { doc ->
+                return@withContext NodeFactory.fromDocument(doc)
             }
+            
+            // If not found, try note document
+            database.getDocument(noteDocId)?.let { doc ->
+                return@withContext NodeFactory.fromDocument(doc)
+            }
+            
+            // If we get here, document wasn't found
+            Log.e(TAG, "Document not found for ID: $id")
+            null
         } catch (e: Exception) {
             Log.e(TAG, "Failed to get node: $id", e)
             null
