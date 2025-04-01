@@ -32,4 +32,5 @@
     <string name="error_saving">Erro ao salvar pasta</string>
     <string name="add_folder">Criar Pasta</string>
     <string name="add_note">Nova Anotação</string>
+    <string name="folder">Pasta</string>
 </resources>

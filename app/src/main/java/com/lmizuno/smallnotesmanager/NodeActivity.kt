@@ -35,7 +35,7 @@ class NodeActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_PARENT_ID = "parent_id"
-        
+
         fun createIntent(context: Context, parentId: String?): Intent {
             return Intent(context, NodeActivity::class.java).apply {
                 putExtra(EXTRA_PARENT_ID, parentId)
@@ -50,12 +50,12 @@ class NodeActivity : AppCompatActivity() {
 
         // Initialize ViewModel
         viewModel = ViewModelProvider(this)[NodeViewModel::class.java]
-        
+
         parentId = intent.getStringExtra(EXTRA_PARENT_ID)
         setupRecyclerView()
         setupSpeedDial()
         setupObservers()
-        
+
         // Load nodes
         viewModel.loadNodes(parentId)
     }
@@ -66,12 +66,15 @@ class NodeActivity : AppCompatActivity() {
                 is Folder -> {
                     startActivity(createIntent(this, node.id))
                 }
+
                 else -> {
                     editorActivityResult.launch(
-                        EditorNoteActivity.createIntent(this, noteId = node.id, parentId = parentId))
+                        EditorNoteActivity.createIntent(this, noteId = node.id, parentId = parentId)
+                    )
                 }
             }
         }
+
         binding.recyclerNodes.layoutManager = LinearLayoutManager(this)
         binding.recyclerNodes.adapter = nodeAdapter
     }
@@ -81,12 +84,7 @@ class NodeActivity : AppCompatActivity() {
         viewModel.nodes.observe(this) { nodes ->
             updateUI(nodes)
         }
-        
-        // Observe loading state
-//        viewModel.loading.observe(this) { isLoading ->
-//            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-//        }
-        
+
         // Observe errors
         viewModel.error.observe(this) { errorMsg ->
             errorMsg?.let {
@@ -98,38 +96,65 @@ class NodeActivity : AppCompatActivity() {
 
     private fun setupSpeedDial() {
         binding.speedDial.apply {
-            mainFabClosedIconColor =
-                ResourcesCompat.getColor(resources, R.color.white, theme)
+            mainFabClosedIconColor = ResourcesCompat.getColor(resources, R.color.white, theme)
+
+            if(parentId != null){
+                // Add delete folder
+                // Should have a dialog where you must type the
+                // name of the folder in order to delete it.
+            }
 
             addActionItem(
                 SpeedDialActionItem.Builder(R.id.fab_add_folder, R.drawable.baseline_folder_24)
-                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, theme))
+                    .setFabBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.primary,
+                            theme
+                        )
+                    )
                     .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, theme))
-                    .setLabel("Add Folder")
-                    .setLabelColor(Color.WHITE)
-                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, theme))
-                    .create()
+                    .setLabel("Add Folder").setLabelColor(Color.WHITE).setLabelBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.primary,
+                            theme
+                        )
+                    ).create()
             )
 
             addActionItem(
                 SpeedDialActionItem.Builder(R.id.fab_add_note, R.drawable.baseline_edit_square_24)
-                    .setFabBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, theme))
+                    .setFabBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.primary,
+                            theme
+                        )
+                    )
                     .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, theme))
-                    .setLabel("Add Note")
-                    .setLabelColor(Color.WHITE)
-                    .setLabelBackgroundColor(ResourcesCompat.getColor(resources, R.color.primary, theme))
-                    .create()
+                    .setLabel("Add Note").setLabelColor(Color.WHITE).setLabelBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.primary,
+                            theme
+                        )
+                    ).create()
             )
 
             setOnActionSelectedListener { actionItem ->
                 when (actionItem.id) {
                     R.id.fab_add_folder -> {
                         editorActivityResult.launch(
-                            EditorFolderActivity.createIntent(this@NodeActivity, parentId = parentId)
+                            EditorFolderActivity.createIntent(
+                                this@NodeActivity,
+                                parentId = parentId
+                            )
                         )
                         close()
                         true
                     }
+
                     R.id.fab_add_note -> {
                         editorActivityResult.launch(
                             EditorNoteActivity.createIntent(this@NodeActivity, parentId = parentId)
@@ -137,6 +162,7 @@ class NodeActivity : AppCompatActivity() {
                         close()
                         true
                     }
+
                     else -> false
                 }
             }
@@ -144,8 +170,16 @@ class NodeActivity : AppCompatActivity() {
     }
 
     private fun updateUI(nodes: List<Node>) {
-        supportActionBar?.title = if (parentId == null) "Root" else "Folder"
-        binding.textNodeCount.text = "Found ${nodes.size} items"
+        // If we're at root level show "Home", otherwise show the folder name
+        if (parentId == null) {
+            supportActionBar?.title = getString(R.string.title_home)
+        } else {
+            // Get the folder name using the parent ID
+            viewModel.getNode(parentId!!) { node ->
+                supportActionBar?.title = node?.name ?: getString(R.string.folder)
+            }
+        }
+
         nodeAdapter.updateNodes(nodes)
     }
 } 
