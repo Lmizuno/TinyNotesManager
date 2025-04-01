@@ -13,11 +13,24 @@ class Folder(
             "id" to id,
             "name" to name,
             "description" to description,
-            "type" to NodeType.FOLDER,
+            "type" to NodeType.FOLDER.name,
             "createdAt" to createdAt,
             "updatedAt" to updatedAt
         ).apply {
             parentId?.let { this["parent"] = it }
+        }
+    }
+    
+    companion object {
+        fun fromMap(map: Map<String, Any?>): Folder {
+            return Folder(
+                id = map["id"] as String,
+                name = map["name"] as String,
+                parentId = map["parent"] as? String,
+                createdAt = map["createdAt"] as? Long ?: System.currentTimeMillis(),
+                updatedAt = map["updatedAt"] as? Long ?: System.currentTimeMillis(),
+                description = map["description"] as? String ?: ""
+            )
         }
     }
 }

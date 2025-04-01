@@ -21,14 +21,14 @@ import com.lmizuno.smallnotesmanager.viewmodels.NodeViewModel
 class NodeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNodeBinding
     private lateinit var viewModel: NodeViewModel
-    private var parentId: String? = null
+    private var currentNodeId: String? = null
     private lateinit var nodeAdapter: NodeAdapter
 
     private val editorActivityResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            viewModel.loadNodes(parentId) // Refresh the list using ViewModel
+            viewModel.loadNodes(currentNodeId) // Refresh the list using ViewModel
         }
     }
 
@@ -50,13 +50,13 @@ class NodeActivity : AppCompatActivity() {
         // Initialize ViewModel
         viewModel = ViewModelProvider(this)[NodeViewModel::class.java]
 
-        parentId = intent.getStringExtra(EXTRA_PARENT_ID)
+        currentNodeId = intent.getStringExtra(EXTRA_PARENT_ID)
         setupRecyclerView()
         setupSpeedDial()
         setupObservers()
 
         // Load nodes
-        viewModel.loadNodes(parentId)
+        viewModel.loadNodes(currentNodeId)
     }
 
     private fun setupRecyclerView() {
@@ -68,7 +68,7 @@ class NodeActivity : AppCompatActivity() {
 
                 else -> {
                     editorActivityResult.launch(
-                        EditorNoteActivity.createIntent(this, noteId = node.id, parentId = parentId)
+                        EditorNoteActivity.createIntent(this, noteId = node.id, parentId = currentNodeId)
                     )
                 }
             }
@@ -149,28 +149,27 @@ class NodeActivity : AppCompatActivity() {
                     ).create()
             )
 
-            addActionItem(
-                SpeedDialActionItem.Builder(R.id.fab_edit_folder, R.drawable.baseline_edit_24)
-                    .setFabBackgroundColor(
-                        ResourcesCompat.getColor(
-                            resources, R.color.primary, theme
-                        )
-                    ).setFabImageTintColor(
-                        ResourcesCompat.getColor(
-                            resources, R.color.white, theme
-                        )
-                    ).setLabel(getString(R.string.edit_folder)).setLabelColor(Color.WHITE)
-                    .setLabelBackgroundColor(
-                        ResourcesCompat.getColor(
-                            resources, R.color.primary, theme
-                        )
-                    ).create()
-            )
-
-            if (parentId != null) {
-                // Add delete folder
+            if (currentNodeId != null) {
                 addActionItem(
-                    SpeedDialActionItem.Builder(R.id.fab_delete_folder, R.drawable.recycle_bin_icon)
+                    SpeedDialActionItem.Builder(R.id.fab_edit_folder, R.drawable.baseline_edit_24)
+                        .setFabBackgroundColor(
+                            ResourcesCompat.getColor(
+                                resources, R.color.primary, theme
+                            )
+                        ).setFabImageTintColor(
+                            ResourcesCompat.getColor(
+                                resources, R.color.white, theme
+                            )
+                        ).setLabel(getString(R.string.edit_folder)).setLabelColor(Color.WHITE)
+                        .setLabelBackgroundColor(
+                            ResourcesCompat.getColor(
+                                resources, R.color.primary, theme
+                            )
+                        ).create()
+                )
+
+                addActionItem(
+                    SpeedDialActionItem.Builder(R.id.fab_delete_folder, R.drawable.baseline_delete_24)
                         .setFabBackgroundColor(
                             ResourcesCompat.getColor(
                                 resources, R.color.primary, theme
@@ -193,7 +192,7 @@ class NodeActivity : AppCompatActivity() {
 
                     R.id.fab_add_note -> {
                         editorActivityResult.launch(
-                            EditorNoteActivity.createIntent(this@NodeActivity, parentId = parentId)
+                            EditorNoteActivity.createIntent(this@NodeActivity, parentId = currentNodeId)
                         )
                         close()
                         true
@@ -202,7 +201,7 @@ class NodeActivity : AppCompatActivity() {
                     R.id.fab_add_folder -> {
                         editorActivityResult.launch(
                             EditorFolderActivity.createIntent(
-                                this@NodeActivity, parentId = parentId
+                                this@NodeActivity, parentId = currentNodeId
                             )
                         )
                         close()
@@ -210,6 +209,11 @@ class NodeActivity : AppCompatActivity() {
                     }
 
                     R.id.fab_edit_folder -> {
+                        editorActivityResult.launch(
+                            EditorFolderActivity.createIntent(
+                                this@NodeActivity, folderId = currentNodeId
+                            )
+                        )
                         close()
                         true
                     }
@@ -230,11 +234,11 @@ class NodeActivity : AppCompatActivity() {
 
     private fun updateUI(nodes: List<Node>) {
         // If we're at root level show "Home", otherwise show the folder name
-        if (parentId == null) {
+        if (currentNodeId == null) {
             supportActionBar?.title = getString(R.string.title_home)
         } else {
             // Get the folder name using the parent ID
-            viewModel.getNode(parentId!!) { node ->
+            viewModel.getNode(currentNodeId!!) { node ->
                 supportActionBar?.title = node?.name ?: getString(R.string.folder)
             }
         }

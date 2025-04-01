@@ -8,27 +8,28 @@ import android.util.Log
 
 object NodeFactory {
     fun fromDocument(document: com.couchbase.lite.Document): Node? {
-        val id = document.getString("id") ?: return null
-        val name = document.getString("name") ?: return null
-        val parentId = document.getString("parent").takeIf { it?.isNotEmpty() ?: false }
-        val createdAt = document.getLong("createdAt") ?: System.currentTimeMillis()
-        val updatedAt = document.getLong("updatedAt") ?: System.currentTimeMillis()
-        
-        val typeString = document.getString("type") ?: return null
-        val type = try {
-            NodeType.valueOf(typeString)
-        } catch (e: IllegalArgumentException) {
-            Log.e("NodeFactory", "Invalid node type: $typeString")
-            return null
-        }
-
-        return when (type) {
-            NodeType.FOLDER -> Folder(id, name, parentId, createdAt, updatedAt)
-            NodeType.NOTE -> {
-                val content = document.getString("content") ?: ""
-                Note(id, name, parentId, createdAt, updatedAt, content)
+        try {
+            // Convert document to map
+            val map = document.toMap()
+            
+            // Get the type
+            val typeString = map["type"] as? String ?: return null
+            val type = try {
+                NodeType.valueOf(typeString)
+            } catch (e: IllegalArgumentException) {
+                Log.e("NodeFactory", "Invalid node type: $typeString")
+                return null
             }
-            else -> null
+            
+            // Create the appropriate node type
+            return when (type) {
+                NodeType.FOLDER -> Folder.fromMap(map)
+                NodeType.NOTE -> Note.fromMap(map)
+                else -> null
+            }
+        } catch (e: Exception) {
+            Log.e("NodeFactory", "Error creating node from document", e)
+            return null
         }
     }
 }
