@@ -33,4 +33,7 @@
     <string name="add_folder">Criar Pasta</string>
     <string name="add_note">Nova Anotação</string>
     <string name="folder">Pasta</string>
+    <string name="delete_folder">Apagar Pasta Atual</string>
+    <string name="edit_folder">Editar Pasta</string>
+    <string name="note_pres_mode">Modo de Leitura</string>
 </resources>

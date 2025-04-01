@@ -36,4 +36,7 @@
     <string name="add_folder">Add folder</string>
     <string name="add_note">New note</string>
     <string name="folder">Folder</string>
+    <string name="delete_folder">Delete Current Folder</string>
+    <string name="edit_folder">Edit Current Folder</string>
+    <string name="note_pres_mode">Note View Mode</string>
 </resources>

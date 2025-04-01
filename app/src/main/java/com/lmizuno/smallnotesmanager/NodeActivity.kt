@@ -1,22 +1,21 @@
 package com.lmizuno.smallnotesmanager
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.lmizuno.smallnotesmanager.databinding.ActivityNodeBinding
-import com.lmizuno.smallnotesmanager.Models.Folder
-import com.lmizuno.smallnotesmanager.Adapters.NodeAdapter
 import com.leinardi.android.speeddial.SpeedDialActionItem
-import androidx.activity.result.contract.ActivityResultContracts
-import android.app.Activity
+import com.lmizuno.smallnotesmanager.Adapters.NodeAdapter
+import com.lmizuno.smallnotesmanager.Models.Folder
 import com.lmizuno.smallnotesmanager.Models.Node
+import com.lmizuno.smallnotesmanager.databinding.ActivityNodeBinding
 import com.lmizuno.smallnotesmanager.viewmodels.NodeViewModel
 
 class NodeActivity : AppCompatActivity() {
@@ -98,27 +97,22 @@ class NodeActivity : AppCompatActivity() {
         binding.speedDial.apply {
             mainFabClosedIconColor = ResourcesCompat.getColor(resources, R.color.white, theme)
 
-            if(parentId != null){
-                // Add delete folder
-                // Should have a dialog where you must type the
-                // name of the folder in order to delete it.
-            }
-
             addActionItem(
-                SpeedDialActionItem.Builder(R.id.fab_add_folder, R.drawable.baseline_folder_24)
-                    .setFabBackgroundColor(
+                SpeedDialActionItem.Builder(
+                    R.id.fab_note_pres_mode,
+                    R.drawable.baseline_play_arrow_24
+                ).setFabBackgroundColor(
                         ResourcesCompat.getColor(
-                            resources,
-                            R.color.primary,
-                            theme
+                            resources, R.color.secondary, theme
                         )
-                    )
-                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, theme))
-                    .setLabel("Add Folder").setLabelColor(Color.WHITE).setLabelBackgroundColor(
+                    ).setFabImageTintColor(
                         ResourcesCompat.getColor(
-                            resources,
-                            R.color.primary,
-                            theme
+                            resources, R.color.white, theme
+                        )
+                    ).setLabel(getString(R.string.note_pres_mode)).setLabelColor(Color.WHITE)
+                    .setLabelBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources, R.color.secondary, theme
                         )
                     ).create()
             )
@@ -127,30 +121,72 @@ class NodeActivity : AppCompatActivity() {
                 SpeedDialActionItem.Builder(R.id.fab_add_note, R.drawable.baseline_edit_square_24)
                     .setFabBackgroundColor(
                         ResourcesCompat.getColor(
-                            resources,
-                            R.color.primary,
-                            theme
+                            resources, R.color.primary, theme
                         )
                     )
                     .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, theme))
-                    .setLabel("Add Note").setLabelColor(Color.WHITE).setLabelBackgroundColor(
+                    .setLabel(getString(R.string.add_note)).setLabelColor(Color.WHITE)
+                    .setLabelBackgroundColor(
                         ResourcesCompat.getColor(
-                            resources,
-                            R.color.primary,
-                            theme
+                            resources, R.color.primary, theme
                         )
                     ).create()
             )
 
+            addActionItem(
+                SpeedDialActionItem.Builder(R.id.fab_add_folder, R.drawable.baseline_folder_24)
+                    .setFabBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources, R.color.primary, theme
+                        )
+                    )
+                    .setFabImageTintColor(ResourcesCompat.getColor(resources, R.color.white, theme))
+                    .setLabel(getString(R.string.add_folder)).setLabelColor(Color.WHITE)
+                    .setLabelBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources, R.color.primary, theme
+                        )
+                    ).create()
+            )
+
+            addActionItem(
+                SpeedDialActionItem.Builder(R.id.fab_edit_folder, R.drawable.baseline_edit_24)
+                    .setFabBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources, R.color.primary, theme
+                        )
+                    ).setFabImageTintColor(
+                        ResourcesCompat.getColor(
+                            resources, R.color.white, theme
+                        )
+                    ).setLabel(getString(R.string.edit_folder)).setLabelColor(Color.WHITE)
+                    .setLabelBackgroundColor(
+                        ResourcesCompat.getColor(
+                            resources, R.color.primary, theme
+                        )
+                    ).create()
+            )
+
+            if (parentId != null) {
+                // Add delete folder
+                addActionItem(
+                    SpeedDialActionItem.Builder(R.id.fab_delete_folder, R.drawable.recycle_bin_icon)
+                        .setFabBackgroundColor(
+                            ResourcesCompat.getColor(
+                                resources, R.color.primary, theme
+                            )
+                        ).setLabel(R.string.delete_folder).setLabelColor(Color.WHITE)
+                        .setLabelBackgroundColor(
+                            ResourcesCompat.getColor(
+                                resources, R.color.primary, theme
+                            )
+                        ).create()
+                )
+            }
+
             setOnActionSelectedListener { actionItem ->
                 when (actionItem.id) {
-                    R.id.fab_add_folder -> {
-                        editorActivityResult.launch(
-                            EditorFolderActivity.createIntent(
-                                this@NodeActivity,
-                                parentId = parentId
-                            )
-                        )
+                    R.id.fab_note_pres_mode -> {
                         close()
                         true
                     }
@@ -159,6 +195,29 @@ class NodeActivity : AppCompatActivity() {
                         editorActivityResult.launch(
                             EditorNoteActivity.createIntent(this@NodeActivity, parentId = parentId)
                         )
+                        close()
+                        true
+                    }
+
+                    R.id.fab_add_folder -> {
+                        editorActivityResult.launch(
+                            EditorFolderActivity.createIntent(
+                                this@NodeActivity, parentId = parentId
+                            )
+                        )
+                        close()
+                        true
+                    }
+
+                    R.id.fab_edit_folder -> {
+                        close()
+                        true
+                    }
+
+                    R.id.deleteCollection -> {
+                        // Should have a dialog where you must type the
+                        // name of the folder in order to delete it.
+
                         close()
                         true
                     }
