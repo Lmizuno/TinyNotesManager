@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
@@ -218,10 +220,81 @@ class NodeActivity : AppCompatActivity() {
                         true
                     }
 
-                    R.id.deleteCollection -> {
-                        // Should have a dialog where you must type the
-                        // name of the folder in order to delete it.
-
+                    R.id.fab_delete_folder -> {
+                        // Only allow deletion if we're in a folder (not at root)
+                        if (currentNodeId != null) {
+                            // Get the current folder to know its name
+                            viewModel.getNode(currentNodeId!!) { node ->
+                                if (node != null) {
+                                    // Create a dialog with EditText for confirmation
+                                    val builder = AlertDialog.Builder(this@NodeActivity)
+                                    val inflater = layoutInflater
+                                    val dialogView = inflater.inflate(R.layout.dialog_delete_confirmation, null)
+                                    val editTextConfirm = dialogView.findViewById<EditText>(R.id.editTextConfirmName)
+                                    
+                                    builder.setView(dialogView)
+                                        .setTitle(getString(R.string.confirm_deletion))
+                                        .setMessage(getString(R.string.delete_folder_confirmation, node.name))
+                                        .setPositiveButton(getString(R.string.delete)) { _, _ ->
+                                            // Check if the entered text matches the folder name
+                                            val enteredName = editTextConfirm.text.toString()
+                                            if (enteredName == node.name) {
+                                                // Names match, proceed with deletion
+                                                viewModel.deleteNode(currentNodeId!!, node.parentId) { success ->
+                                                    if (success) {
+                                                        // Go back to parent folder
+                                                        Toast.makeText(
+                                                            this@NodeActivity,
+                                                            getString(R.string.folder_deleted),
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                        
+                                                        // If we have a parent, navigate back to it
+                                                        if (node.parentId != null) {
+                                                            val intent = createIntent(this@NodeActivity, node.parentId)
+                                                            startActivity(intent)
+                                                        } else {
+                                                            // Otherwise go to root
+                                                            val intent = createIntent(this@NodeActivity, null)
+                                                            startActivity(intent)
+                                                        }
+                                                        finish()
+                                                    } else {
+                                                        Toast.makeText(
+                                                            this@NodeActivity,
+                                                            getString(R.string.delete_failed),
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                    }
+                                                }
+                                            } else {
+                                                // Names don't match, show error
+                                                Toast.makeText(
+                                                    this@NodeActivity,
+                                                    getString(R.string.name_doesnt_match),
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            }
+                                        }
+                                        .setNegativeButton(getString(R.string.cancel), null)
+                                    
+                                    val dialog = builder.create()
+                                    dialog.show()
+                                } else {
+                                    Toast.makeText(
+                                        this@NodeActivity,
+                                        getString(R.string.folder_not_found),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                        } else {
+                            Toast.makeText(
+                                this@NodeActivity,
+                                getString(R.string.cannot_delete_root),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                         close()
                         true
                     }

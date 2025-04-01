@@ -36,4 +36,14 @@
     <string name="delete_folder">Apagar Pasta Atual</string>
     <string name="edit_folder">Editar Pasta</string>
     <string name="note_pres_mode">Modo de Leitura</string>
+    <string name="confirm_deletion">Confirmar exclusão</string>
+    <string name="delete_folder_confirmation">Para apagar essa pasta e TODOS os seus conteúdos, digite \"%1$s\" abaixo.</string>
+    <string name="type_folder_name_to_confirm">Digite o nome da pasta para confirmar:</string>
+    <string name="folder_name">Nome da Pasta</string>
+    <string name="delete">Excluir</string>
+    <string name="name_doesnt_match">O nome que digitou não está certo.</string>
+    <string name="folder_deleted">Pasta excluida com sucesso</string>
+    <string name="delete_failed">Falha ao excluir a pasta</string>
+    <string name="folder_not_found">Pasta não encontrada</string>
+    <string name="cannot_delete_root">Não é possível excluir a pasta raiz</string>
 </resources>

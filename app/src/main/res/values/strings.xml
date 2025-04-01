@@ -39,4 +39,14 @@
     <string name="delete_folder">Delete Current Folder</string>
     <string name="edit_folder">Edit Current Folder</string>
     <string name="note_pres_mode">Note View Mode</string>
+    <string name="confirm_deletion">Confirm Deletion</string>
+    <string name="delete_folder_confirmation">To delete the folder and all its contents, type \"%1$s\" below.</string>
+    <string name="type_folder_name_to_confirm">Type the folder name to confirm deletion:</string>
+    <string name="folder_name">Folder name</string>
+    <string name="delete">Delete</string>
+    <string name="name_doesnt_match">The name you entered doesn\'t match the folder name</string>
+    <string name="folder_deleted">Folder deleted successfully</string>
+    <string name="delete_failed">Failed to delete folder</string>
+    <string name="folder_not_found">Folder not found</string>
+    <string name="cannot_delete_root">Cannot delete the root folder</string>
 </resources>
