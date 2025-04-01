@@ -16,9 +16,14 @@ class NodeAdapter(
     class NodeViewHolder(
         private val binding: ItemNodeBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        
         fun bind(node: Node, onNodeClick: (Node) -> Unit) {
-            binding.textName.text = node.name
+            when (node) {
+                is Folder -> {
+                    binding.textName.text = node.name
+                    binding.textDescription.text = node.description
+                }
+                else -> binding.textName.text = node.name
+            }
             
             // Set icon and color
             binding.iconType.apply {
