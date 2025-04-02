@@ -2,13 +2,13 @@ package com.lmizuno.smallnotesmanager
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
-import com.lmizuno.smallnotesmanager.Models.Folder
+import com.lmizuno.smallnotesmanager.models.Folder
 import com.lmizuno.smallnotesmanager.viewmodels.NodeViewModel
 
 class EditorFolderActivity : AppCompatActivity() {
@@ -22,8 +22,12 @@ class EditorFolderActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_FOLDER_ID = "folder_id"
         private const val EXTRA_PARENT_ID = "parent_id"
-        
-        fun createIntent(context: Activity, folderId: String? = null, parentId: String? = null): Intent {
+
+        fun createIntent(
+            context: Activity,
+            folderId: String? = null,
+            parentId: String? = null
+        ): Intent {
             return Intent(context, EditorFolderActivity::class.java).apply {
                 putExtra(EXTRA_FOLDER_ID, folderId)
                 putExtra(EXTRA_PARENT_ID, parentId)
@@ -41,7 +45,7 @@ class EditorFolderActivity : AppCompatActivity() {
         // Get folder ID and parent ID from intent
         val folderId = intent.getStringExtra(EXTRA_FOLDER_ID)
         parentId = intent.getStringExtra(EXTRA_PARENT_ID)
-        
+
         name = findViewById(R.id.nameInput)
         description = findViewById(R.id.descriptionInput)
         doneButton = findViewById(R.id.doneCollectionButton)
@@ -89,7 +93,8 @@ class EditorFolderActivity : AppCompatActivity() {
             return false
         }
         if (description.text.isNullOrEmpty()) {
-            Toast.makeText(this, getString(R.string.please_add_a_description), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.please_add_a_description), Toast.LENGTH_SHORT)
+                .show()
             return false
         }
         return true
@@ -115,7 +120,7 @@ class EditorFolderActivity : AppCompatActivity() {
                 description = this@EditorFolderActivity.description.text.toString()
                 updatedAt = System.currentTimeMillis()
             }
-            
+
             folder?.let { folder ->
                 viewModel.updateNode(folder) { success ->
                     if (success) {

@@ -9,9 +9,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
-import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
-import com.lmizuno.smallnotesmanager.Models.Item
-import com.lmizuno.smallnotesmanager.Scripts.DeprecationManager
+import com.lmizuno.smallnotesmanager.dbManager.AppDatabase
+import com.lmizuno.smallnotesmanager.models.Item
+import com.lmizuno.smallnotesmanager.scripts.DeprecationManager
 import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
 import io.noties.markwon.editor.MarkwonEditorTextWatcher
@@ -58,8 +58,7 @@ class EditorItemActivity : AppCompatActivity() {
                     .setPositiveButton(getString(R.string.remove)) { dialog, id ->
                         AppDatabase.getInstance(this).itemDao().delete(item!!)
                         finish()
-                    }
-                    .setNegativeButton(getString(R.string.cancel)) { dialog, id ->
+                    }.setNegativeButton(getString(R.string.cancel)) { dialog, id ->
                     }
                 builder.create().show()
             }
@@ -75,8 +74,7 @@ class EditorItemActivity : AppCompatActivity() {
             }
             if (content.text.isNullOrEmpty()) {
                 Toast.makeText(
-                    this,
-                    getString(R.string.please_add_a_description), Toast.LENGTH_SHORT
+                    this, getString(R.string.please_add_a_description), Toast.LENGTH_SHORT
                 ).show()
                 return@setOnClickListener
             }

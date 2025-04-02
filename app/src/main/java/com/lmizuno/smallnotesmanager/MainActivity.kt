@@ -2,8 +2,8 @@ package com.lmizuno.smallnotesmanager
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.lmizuno.smallnotesmanager.Utils.ThemeManager
 import com.lmizuno.smallnotesmanager.databinding.ActivityMainBinding
+import com.lmizuno.smallnotesmanager.utils.ThemeManager
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

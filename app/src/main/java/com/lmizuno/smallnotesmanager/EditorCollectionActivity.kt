@@ -2,13 +2,13 @@ package com.lmizuno.smallnotesmanager
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
-import com.lmizuno.smallnotesmanager.Models.Collection
-import com.lmizuno.smallnotesmanager.Scripts.DeprecationManager
+import com.lmizuno.smallnotesmanager.models.Collection
+import com.lmizuno.smallnotesmanager.scripts.DeprecationManager
 
 class EditorCollectionActivity : AppCompatActivity() {
     private lateinit var description: TextInputEditText

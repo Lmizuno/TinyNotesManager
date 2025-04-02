@@ -7,7 +7,7 @@
     android:background="?attr/colorOnBackground"
     android:orientation="vertical"
     android:paddingTop="10dp"
-    tools:context=".Ui.home.HomeFragment"
+    tools:context=".ui.home.HomeFragment"
     android:fitsSystemWindows="true">
 
     <androidx.recyclerview.widget.RecyclerView

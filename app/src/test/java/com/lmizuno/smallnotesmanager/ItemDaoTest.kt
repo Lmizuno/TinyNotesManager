@@ -3,9 +3,9 @@ package com.lmizuno.smallnotesmanager
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
-import com.lmizuno.smallnotesmanager.Models.Collection
-import com.lmizuno.smallnotesmanager.Models.Item
+import com.lmizuno.smallnotesmanager.dbManager.AppDatabase
+import com.lmizuno.smallnotesmanager.models.Collection
+import com.lmizuno.smallnotesmanager.models.Item
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull

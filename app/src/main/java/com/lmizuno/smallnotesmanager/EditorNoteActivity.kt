@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.textfield.TextInputEditText
-import com.lmizuno.smallnotesmanager.Models.Note
+import com.lmizuno.smallnotesmanager.models.Note
 import com.lmizuno.smallnotesmanager.viewmodels.NodeViewModel
 import io.noties.markwon.Markwon
 import io.noties.markwon.editor.MarkwonEditor
@@ -26,8 +26,12 @@ class EditorNoteActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_NOTE_ID = "note_id"
         private const val EXTRA_PARENT_ID = "parent_id"
-        
-        fun createIntent(context: Activity, noteId: String? = null, parentId: String? = null): Intent {
+
+        fun createIntent(
+            context: Activity,
+            noteId: String? = null,
+            parentId: String? = null
+        ): Intent {
             return Intent(context, EditorNoteActivity::class.java).apply {
                 putExtra(EXTRA_NOTE_ID, noteId)
                 putExtra(EXTRA_PARENT_ID, parentId)
@@ -98,7 +102,7 @@ class EditorNoteActivity : AppCompatActivity() {
                 note = node
                 title.setText(note?.name)
                 content.setText(note?.content)
-                
+
                 // Show remove button for existing notes
                 removeButton.visibility = android.view.View.VISIBLE
             } else {
@@ -114,7 +118,8 @@ class EditorNoteActivity : AppCompatActivity() {
             return false
         }
         if (content.text.isNullOrEmpty()) {
-            Toast.makeText(this, getString(R.string.please_add_a_description), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.please_add_a_description), Toast.LENGTH_SHORT)
+                .show()
             return false
         }
         return true
@@ -124,9 +129,7 @@ class EditorNoteActivity : AppCompatActivity() {
         if (note == null) {
             // Create new note
             viewModel.createNote(
-                name = title.text.toString(),
-                content = content.text.toString(),
-                parentId = parentId
+                name = title.text.toString(), content = content.text.toString(), parentId = parentId
             ) { success ->
                 if (success) {
                     setResult(Activity.RESULT_OK)
@@ -140,7 +143,7 @@ class EditorNoteActivity : AppCompatActivity() {
                 content = this@EditorNoteActivity.content.text.toString()
                 updatedAt = System.currentTimeMillis()
             }
-            
+
             note?.let { currentNote ->
                 viewModel.updateNode(currentNote) { success ->
                     if (success) {

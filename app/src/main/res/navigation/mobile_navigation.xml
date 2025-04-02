@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.lmizuno.smallnotesmanager.Ui.home.HomeFragment"
+        android:name="com.lmizuno.smallnotesmanager.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -17,25 +17,25 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.lmizuno.smallnotesmanager.Ui.dashboard.DashboardFragment"
+        android:name="com.lmizuno.smallnotesmanager.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.lmizuno.smallnotesmanager.Ui.notifications.NotificationsFragment"
+        android:name="com.lmizuno.smallnotesmanager.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
         android:id="@+id/navigation_collection_view"
-        android:name="com.lmizuno.smallnotesmanager.Ui.collection.CollectionViewFragment"
+        android:name="com.lmizuno.smallnotesmanager.ui.collection.CollectionViewFragment"
         android:label="@string/title_collectionView"
         tools:layout="@layout/fragment_collection_view" />
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.lmizuno.smallnotesmanager.Ui.settings.SettingsFragment"
+        android:name="com.lmizuno.smallnotesmanager.ui.settings.SettingsFragment"
         android:label="Settings" />
 
     <action

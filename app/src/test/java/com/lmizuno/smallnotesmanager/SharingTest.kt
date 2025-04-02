@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.core.net.toUri
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
-import com.lmizuno.smallnotesmanager.Models.Collection
-import com.lmizuno.smallnotesmanager.Models.Item
-import com.lmizuno.smallnotesmanager.Scripts.Sharing
+import com.lmizuno.smallnotesmanager.dbManager.AppDatabase
+import com.lmizuno.smallnotesmanager.models.Collection
+import com.lmizuno.smallnotesmanager.models.Item
+import com.lmizuno.smallnotesmanager.scripts.Sharing
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

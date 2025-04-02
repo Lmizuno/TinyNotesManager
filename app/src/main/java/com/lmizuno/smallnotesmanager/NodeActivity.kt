@@ -14,10 +14,10 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.leinardi.android.speeddial.SpeedDialActionItem
-import com.lmizuno.smallnotesmanager.Adapters.NodeAdapter
-import com.lmizuno.smallnotesmanager.Models.Folder
-import com.lmizuno.smallnotesmanager.Models.Node
+import com.lmizuno.smallnotesmanager.adapters.NodeAdapter
 import com.lmizuno.smallnotesmanager.databinding.ActivityNodeBinding
+import com.lmizuno.smallnotesmanager.models.Folder
+import com.lmizuno.smallnotesmanager.models.Node
 import com.lmizuno.smallnotesmanager.viewmodels.NodeViewModel
 
 class NodeActivity : AppCompatActivity() {
@@ -70,7 +70,11 @@ class NodeActivity : AppCompatActivity() {
 
                 else -> {
                     editorActivityResult.launch(
-                        EditorNoteActivity.createIntent(this, noteId = node.id, parentId = currentNodeId)
+                        EditorNoteActivity.createIntent(
+                            this,
+                            noteId = node.id,
+                            parentId = currentNodeId
+                        )
                     )
                 }
             }
@@ -101,17 +105,16 @@ class NodeActivity : AppCompatActivity() {
 
             addActionItem(
                 SpeedDialActionItem.Builder(
-                    R.id.fab_note_pres_mode,
-                    R.drawable.baseline_play_arrow_24
+                    R.id.fab_note_pres_mode, R.drawable.baseline_play_arrow_24
                 ).setFabBackgroundColor(
-                        ResourcesCompat.getColor(
-                            resources, R.color.secondary, theme
-                        )
-                    ).setFabImageTintColor(
-                        ResourcesCompat.getColor(
-                            resources, R.color.white, theme
-                        )
-                    ).setLabel(getString(R.string.note_pres_mode)).setLabelColor(Color.WHITE)
+                    ResourcesCompat.getColor(
+                        resources, R.color.secondary, theme
+                    )
+                ).setFabImageTintColor(
+                    ResourcesCompat.getColor(
+                        resources, R.color.white, theme
+                    )
+                ).setLabel(getString(R.string.note_pres_mode)).setLabelColor(Color.WHITE)
                     .setLabelBackgroundColor(
                         ResourcesCompat.getColor(
                             resources, R.color.secondary, theme
@@ -171,8 +174,10 @@ class NodeActivity : AppCompatActivity() {
                 )
 
                 addActionItem(
-                    SpeedDialActionItem.Builder(R.id.fab_delete_folder, R.drawable.baseline_delete_24)
-                        .setFabBackgroundColor(
+                    SpeedDialActionItem.Builder(
+                        R.id.fab_delete_folder,
+                        R.drawable.baseline_delete_24
+                    ).setFabBackgroundColor(
                             ResourcesCompat.getColor(
                                 resources, R.color.primary, theme
                             )
@@ -193,7 +198,7 @@ class NodeActivity : AppCompatActivity() {
                             getString(R.string.note_pres_mode),
                             getString(R.string.note_deep_pres_mode)
                         )
-                        
+
                         AlertDialog.Builder(this@NodeActivity)
                             .setTitle(getString(R.string.choose_presentation_mode))
                             .setItems(options) { _, which ->
@@ -202,22 +207,24 @@ class NodeActivity : AppCompatActivity() {
                                     1 -> PRESENTATION_OPTION.RECURSIVE
                                     else -> PRESENTATION_OPTION.SHALLOW
                                 }
-                                
-                                startActivity(NodePresentationActivity.createIntent(
-                                    this@NodeActivity,
-                                    currentNodeId,
-                                    presOption
-                                ))
-                            }
-                            .show()
-                        
+
+                                startActivity(
+                                    NodePresentationActivity.createIntent(
+                                        this@NodeActivity, currentNodeId, presOption
+                                    )
+                                )
+                            }.show()
+
                         close()
                         true
                     }
 
                     R.id.fab_add_note -> {
                         editorActivityResult.launch(
-                            EditorNoteActivity.createIntent(this@NodeActivity, parentId = currentNodeId)
+                            EditorNoteActivity.createIntent(
+                                this@NodeActivity,
+                                parentId = currentNodeId
+                            )
                         )
                         close()
                         true
@@ -252,18 +259,26 @@ class NodeActivity : AppCompatActivity() {
                                     // Create a dialog with EditText for confirmation
                                     val builder = AlertDialog.Builder(this@NodeActivity)
                                     val inflater = layoutInflater
-                                    val dialogView = inflater.inflate(R.layout.dialog_delete_confirmation, null)
-                                    val editTextConfirm = dialogView.findViewById<EditText>(R.id.editTextConfirmName)
-                                    
+                                    val dialogView =
+                                        inflater.inflate(R.layout.dialog_delete_confirmation, null)
+                                    val editTextConfirm =
+                                        dialogView.findViewById<EditText>(R.id.editTextConfirmName)
+
                                     builder.setView(dialogView)
-                                        .setTitle(getString(R.string.confirm_deletion))
-                                        .setMessage(getString(R.string.delete_folder_confirmation, node.name))
-                                        .setPositiveButton(getString(R.string.delete)) { _, _ ->
+                                        .setTitle(getString(R.string.confirm_deletion)).setMessage(
+                                            getString(
+                                                R.string.delete_folder_confirmation,
+                                                node.name
+                                            )
+                                        ).setPositiveButton(getString(R.string.delete)) { _, _ ->
                                             // Check if the entered text matches the folder name
                                             val enteredName = editTextConfirm.text.toString()
                                             if (enteredName == node.name) {
                                                 // Names match, proceed with deletion
-                                                viewModel.deleteNode(currentNodeId!!, node.parentId) { success ->
+                                                viewModel.deleteNode(
+                                                    currentNodeId!!,
+                                                    node.parentId
+                                                ) { success ->
                                                     if (success) {
                                                         // Go back to parent folder
                                                         Toast.makeText(
@@ -271,14 +286,20 @@ class NodeActivity : AppCompatActivity() {
                                                             getString(R.string.folder_deleted),
                                                             Toast.LENGTH_SHORT
                                                         ).show()
-                                                        
+
                                                         // If we have a parent, navigate back to it
                                                         if (node.parentId != null) {
-                                                            val intent = createIntent(this@NodeActivity, node.parentId)
+                                                            val intent = createIntent(
+                                                                this@NodeActivity,
+                                                                node.parentId
+                                                            )
                                                             startActivity(intent)
                                                         } else {
                                                             // Otherwise go to root
-                                                            val intent = createIntent(this@NodeActivity, null)
+                                                            val intent = createIntent(
+                                                                this@NodeActivity,
+                                                                null
+                                                            )
                                                             startActivity(intent)
                                                         }
                                                         finish()
@@ -298,9 +319,8 @@ class NodeActivity : AppCompatActivity() {
                                                     Toast.LENGTH_LONG
                                                 ).show()
                                             }
-                                        }
-                                        .setNegativeButton(getString(R.string.cancel), null)
-                                    
+                                        }.setNegativeButton(getString(R.string.cancel), null)
+
                                     val dialog = builder.create()
                                     dialog.show()
                                 } else {

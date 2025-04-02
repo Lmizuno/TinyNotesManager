@@ -6,8 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lmizuno.smallnotesmanager.Models.Folder
-import com.lmizuno.smallnotesmanager.Models.Node
+import com.lmizuno.smallnotesmanager.models.Folder
+import com.lmizuno.smallnotesmanager.models.Node
 import com.lmizuno.smallnotesmanager.repositories.NodeRepository
 import kotlinx.coroutines.launch
 
@@ -51,10 +51,7 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
      * Creates a new folder
      */
     fun createFolder(
-        name: String,
-        description: String,
-        parentId: String?,
-        onComplete: (Boolean) -> Unit
+        name: String, description: String, parentId: String?, onComplete: (Boolean) -> Unit
     ) {
         viewModelScope.launch {
             try {
@@ -80,10 +77,7 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
      * Creates a new note
      */
     fun createNote(
-        name: String,
-        content: String,
-        parentId: String?,
-        onComplete: (Boolean) -> Unit
+        name: String, content: String, parentId: String?, onComplete: (Boolean) -> Unit
     ) {
         viewModelScope.launch {
             try {
@@ -182,22 +176,22 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
     fun loadNodesRecursively(parentId: String?, onComplete: (List<Node>) -> Unit) {
         _loading.value = true
         _error.value = null
-        
+
         viewModelScope.launch {
             try {
                 val allNodes = mutableListOf<Node>()
-                
+
                 // First, get the nodes at this level
                 val currentLevelNodes = nodeRepository.queryNodesByParent(parentId)
                 allNodes.addAll(currentLevelNodes)
-                
+
                 // Then, for each folder, recursively get its children
                 val folders = currentLevelNodes.filterIsInstance<Folder>()
                 for (folder in folders) {
                     val childNodes = nodeRepository.queryNodesRecursively(folder.id)
                     allNodes.addAll(childNodes)
                 }
-                
+
                 onComplete(allNodes)
                 _loading.value = false
             } catch (e: Exception) {

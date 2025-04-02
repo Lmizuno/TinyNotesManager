@@ -1,16 +1,21 @@
 package com.lmizuno.smallnotesmanager.repositories
 
 import android.content.Context
-import com.couchbase.lite.*
-import com.lmizuno.smallnotesmanager.DBManager.CouchbaseManager
-import com.lmizuno.smallnotesmanager.Models.Folder
-import com.lmizuno.smallnotesmanager.Models.Node
-import com.lmizuno.smallnotesmanager.Models.NodeType
-import com.lmizuno.smallnotesmanager.Models.Note
-import com.lmizuno.smallnotesmanager.DAO.NodeFactory
+import android.util.Log
+import com.couchbase.lite.DataSource
+import com.couchbase.lite.Database
+import com.couchbase.lite.Expression
+import com.couchbase.lite.MutableDocument
+import com.couchbase.lite.QueryBuilder
+import com.couchbase.lite.SelectResult
+import com.lmizuno.smallnotesmanager.dao.NodeFactory
+import com.lmizuno.smallnotesmanager.dbManager.CouchbaseManager
+import com.lmizuno.smallnotesmanager.models.Folder
+import com.lmizuno.smallnotesmanager.models.Node
+import com.lmizuno.smallnotesmanager.models.NodeType
+import com.lmizuno.smallnotesmanager.models.Note
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import android.util.Log
 import java.util.UUID
 
 /**
@@ -18,13 +23,13 @@ import java.util.UUID
  */
 class NodeRepository(context: Context) {
     private val database: Database = CouchbaseManager.getInstance(context).getDatabase()
-    
+
     companion object {
         private const val TAG = "NodeRepository"
-        
+
         @Volatile
         private var instance: NodeRepository? = null
-        
+
         fun getInstance(context: Context): NodeRepository {
             return instance ?: synchronized(this) {
                 instance ?: NodeRepository(context).also { instance = it }
@@ -43,25 +48,27 @@ class NodeRepository(context: Context) {
                 is Note -> NodeType.NOTE
                 else -> throw IllegalArgumentException("Unsupported node type")
             }.name
-            
+
             // Use pure ID without prefix
             val docId = node.id
-            
+
             val properties = node.toMap().toMutableMap().apply {
                 // Make sure type is set properly for storage
                 this["type"] = type
             }
-            
+
             val mutableDoc = MutableDocument(docId, properties)
             database.save(mutableDoc)
-            
-            Log.d(TAG, """
+
+            Log.d(
+                TAG, """
                 Saved document:
                 - ID: $docId
                 - Type: $type
                 - Name: ${node.name}
-            """.trimIndent())
-            
+            """.trimIndent()
+            )
+
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to save node", e)
@@ -79,21 +86,21 @@ class NodeRepository(context: Context) {
                 is Note -> NodeType.NOTE
                 else -> throw IllegalArgumentException("Unsupported node type")
             }.name
-            
+
             // Use pure ID without prefix
             val docId = node.id
-            
+
             database.getDocument(docId)?.let { doc ->
                 val mutableDoc = doc.toMutable()
                 val properties = node.toMap()
-                
-                properties.forEach { (key, value) -> 
+
+                properties.forEach { (key, value) ->
                     mutableDoc.setValue(key, value)
                 }
-                
+
                 // Ensure type is consistent
                 mutableDoc.setValue("type", type)
-                
+
                 database.save(mutableDoc)
                 Log.d(TAG, "Updated document: $docId")
                 true
@@ -128,54 +135,56 @@ class NodeRepository(context: Context) {
     /**
      * Creates a new folder with the given details.
      */
-    suspend fun createFolder(name: String, description: String, parentId: String?): Folder? = withContext(Dispatchers.IO) {
-        try {
-            val folderId = UUID.randomUUID().toString()
-            val folder = Folder(
-                id = folderId,
-                name = name,
-                parentId = parentId,
-                description = description,
-                createdAt = System.currentTimeMillis(),
-                updatedAt = System.currentTimeMillis()
-            )
-            
-            if (saveNode(folder)) {
-                folder
-            } else {
+    suspend fun createFolder(name: String, description: String, parentId: String?): Folder? =
+        withContext(Dispatchers.IO) {
+            try {
+                val folderId = UUID.randomUUID().toString()
+                val folder = Folder(
+                    id = folderId,
+                    name = name,
+                    parentId = parentId,
+                    description = description,
+                    createdAt = System.currentTimeMillis(),
+                    updatedAt = System.currentTimeMillis()
+                )
+
+                if (saveNode(folder)) {
+                    folder
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to create folder", e)
                 null
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to create folder", e)
-            null
         }
-    }
 
     /**
      * Creates a new note with the given details.
      */
-    suspend fun createNote(name: String, content: String, parentId: String?): Note? = withContext(Dispatchers.IO) {
-        try {
-            val noteId = UUID.randomUUID().toString()
-            val note = Note(
-                id = noteId,
-                name = name,
-                parentId = parentId,
-                content = content,
-                createdAt = System.currentTimeMillis(),
-                updatedAt = System.currentTimeMillis()
-            )
-            
-            if (saveNode(note)) {
-                note
-            } else {
+    suspend fun createNote(name: String, content: String, parentId: String?): Note? =
+        withContext(Dispatchers.IO) {
+            try {
+                val noteId = UUID.randomUUID().toString()
+                val note = Note(
+                    id = noteId,
+                    name = name,
+                    parentId = parentId,
+                    content = content,
+                    createdAt = System.currentTimeMillis(),
+                    updatedAt = System.currentTimeMillis()
+                )
+
+                if (saveNode(note)) {
+                    note
+                } else {
+                    null
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to create note", e)
                 null
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to create note", e)
-            null
         }
-    }
 
     /**
      * Queries nodes by parent ID.
@@ -183,26 +192,24 @@ class NodeRepository(context: Context) {
     suspend fun queryNodesByParent(parentId: String?): List<Node> = withContext(Dispatchers.IO) {
         try {
             val query = if (parentId == null) {
-                QueryBuilder
-                    .select(SelectResult.all())
-                    .from(DataSource.database(database))
+                QueryBuilder.select(SelectResult.all()).from(DataSource.database(database))
                     .where(Expression.property("parent").isNotValued())
             } else {
-                QueryBuilder
-                    .select(SelectResult.all())
-                    .from(DataSource.database(database))
+                QueryBuilder.select(SelectResult.all()).from(DataSource.database(database))
                     .where(Expression.property("parent").equalTo(Expression.string(parentId)))
             }
 
-            Log.d(TAG, """
+            Log.d(
+                TAG, """
                 Executing parent query:
                 - Parent ID: ${parentId ?: "ROOT"}
                 - Database size: ${database.count}
-            """.trimIndent())
+            """.trimIndent()
+            )
 
             query.execute().allResults().mapNotNull { result ->
                 val docId = result.getDictionary(0)?.getString("id") ?: return@mapNotNull null
-                
+
                 database.getDocument(docId)?.let { doc ->
                     NodeFactory.fromDocument(doc)
                 }
@@ -214,7 +221,7 @@ class NodeRepository(context: Context) {
             emptyList()
         }
     }
-    
+
     /**
      * Deletes a node by its ID.
      */
@@ -240,12 +247,12 @@ class NodeRepository(context: Context) {
      */
     suspend fun queryNodesRecursively(parentId: String?): List<Node> = withContext(Dispatchers.IO) {
         val result = mutableListOf<Node>()
-        
+
         try {
             // Get direct children
             val directChildren = queryNodesByParent(parentId)
             result.addAll(directChildren)
-            
+
             // For each folder, recursively get its children
             val folders = directChildren.filterIsInstance<Folder>()
             for (folder in folders) {
@@ -255,7 +262,7 @@ class NodeRepository(context: Context) {
         } catch (e: Exception) {
             Log.e(TAG, "Error querying nodes recursively", e)
         }
-        
+
         result
     }
 } 
