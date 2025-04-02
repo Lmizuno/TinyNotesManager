@@ -56,6 +56,10 @@
             android:name=".EditorNoteActivity"
             android:exported="false"
             android:theme="@style/Theme.SmallNotesManager.NoActionBar" />
+        <activity
+            android:name=".NodePresentationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SmallNotesManager" />
     </application>
 
 </manifest>

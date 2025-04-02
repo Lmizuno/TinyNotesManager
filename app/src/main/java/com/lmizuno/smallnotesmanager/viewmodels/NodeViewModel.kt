@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.lmizuno.smallnotesmanager.Models.Folder
 import com.lmizuno.smallnotesmanager.Models.Node
 import com.lmizuno.smallnotesmanager.repositories.NodeRepository
 import kotlinx.coroutines.launch
@@ -171,6 +172,39 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
                 Log.e(TAG, "Error getting node", e)
                 _error.value = e.message
                 onComplete(null)
+            }
+        }
+    }
+
+    /**
+     * Loads nodes recursively for the given parent ID
+     */
+    fun loadNodesRecursively(parentId: String?, onComplete: (List<Node>) -> Unit) {
+        _loading.value = true
+        _error.value = null
+        
+        viewModelScope.launch {
+            try {
+                val allNodes = mutableListOf<Node>()
+                
+                // First, get the nodes at this level
+                val currentLevelNodes = nodeRepository.queryNodesByParent(parentId)
+                allNodes.addAll(currentLevelNodes)
+                
+                // Then, for each folder, recursively get its children
+                val folders = currentLevelNodes.filterIsInstance<Folder>()
+                for (folder in folders) {
+                    val childNodes = nodeRepository.queryNodesRecursively(folder.id)
+                    allNodes.addAll(childNodes)
+                }
+                
+                onComplete(allNodes)
+                _loading.value = false
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loading nodes recursively", e)
+                _error.value = e.message
+                _loading.value = false
+                onComplete(emptyList())
             }
         }
     }

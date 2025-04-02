@@ -24,4 +24,9 @@
         android:id="@+id/fab_note_pres_mode"
         android:title="@string/note_pres_mode"
         />
+
+    <item
+        android:id="@+id/fab_note_deep_pres_mode"
+        android:title="@string/note_deep_pres_mode"
+        />
 </menu>

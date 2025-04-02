@@ -38,7 +38,7 @@
     <string name="folder">Folder</string>
     <string name="delete_folder">Delete Current Folder</string>
     <string name="edit_folder">Edit Current Folder</string>
-    <string name="note_pres_mode">Note View Mode</string>
+    <string name="note_pres_mode">Note View</string>
     <string name="confirm_deletion">Confirm Deletion</string>
     <string name="delete_folder_confirmation">To delete the folder and all its contents, type \"%1$s\" below.</string>
     <string name="type_folder_name_to_confirm">Type the folder name to confirm deletion:</string>
@@ -49,4 +49,7 @@
     <string name="delete_failed">Failed to delete folder</string>
     <string name="folder_not_found">Folder not found</string>
     <string name="cannot_delete_root">Cannot delete the root folder</string>
+    <string name="no_notes_to_display">No notes to display in this folder</string>
+    <string name="note_deep_pres_mode">Deep View</string>
+    <string name="choose_presentation_mode">Choose your presentation mode</string>
 </resources>

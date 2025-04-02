@@ -38,6 +38,7 @@
             android:id="@+id/pageTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/pageScrollview" />
+            app:layout_constraintTop_toTopOf="@id/pageScrollview"
+            android:textColor="@color/black"/>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

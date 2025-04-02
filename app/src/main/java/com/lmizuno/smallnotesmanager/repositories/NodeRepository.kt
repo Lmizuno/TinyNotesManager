@@ -234,4 +234,28 @@ class NodeRepository(context: Context) {
             false
         }
     }
+
+    /**
+     * Recursively queries all nodes under a parent ID
+     */
+    suspend fun queryNodesRecursively(parentId: String?): List<Node> = withContext(Dispatchers.IO) {
+        val result = mutableListOf<Node>()
+        
+        try {
+            // Get direct children
+            val directChildren = queryNodesByParent(parentId)
+            result.addAll(directChildren)
+            
+            // For each folder, recursively get its children
+            val folders = directChildren.filterIsInstance<Folder>()
+            for (folder in folders) {
+                val childNodes = queryNodesRecursively(folder.id)
+                result.addAll(childNodes)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error querying nodes recursively", e)
+        }
+        
+        result
+    }
 } 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CollectionPresentationActivity">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/note_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="28dp" />
+
+    <me.relex.circleindicator.CircleIndicator3
+        android:id="@+id/page_indicator"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        app:ci_drawable="@drawable/black_oval"
+        android:layout_height="28dp" />
+</RelativeLayout>

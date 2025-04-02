@@ -46,4 +46,7 @@
     <string name="delete_failed">Falha ao excluir a pasta</string>
     <string name="folder_not_found">Pasta não encontrada</string>
     <string name="cannot_delete_root">Não é possível excluir a pasta raiz</string>
+    <string name="note_deep_pres_mode">Modo Livro</string>
+    <string name="no_notes_to_display">Nenhuma nota encontrada</string>
+    <string name="choose_presentation_mode">Escolha o modo</string>
 </resources>

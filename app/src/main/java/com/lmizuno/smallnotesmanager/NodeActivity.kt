@@ -188,6 +188,29 @@ class NodeActivity : AppCompatActivity() {
             setOnActionSelectedListener { actionItem ->
                 when (actionItem.id) {
                     R.id.fab_note_pres_mode -> {
+                        // Show dialog to choose presentation mode
+                        val options = arrayOf(
+                            getString(R.string.note_pres_mode),
+                            getString(R.string.note_deep_pres_mode)
+                        )
+                        
+                        AlertDialog.Builder(this@NodeActivity)
+                            .setTitle(getString(R.string.choose_presentation_mode))
+                            .setItems(options) { _, which ->
+                                val presOption = when (which) {
+                                    0 -> PRESENTATION_OPTION.SHALLOW
+                                    1 -> PRESENTATION_OPTION.RECURSIVE
+                                    else -> PRESENTATION_OPTION.SHALLOW
+                                }
+                                
+                                startActivity(NodePresentationActivity.createIntent(
+                                    this@NodeActivity,
+                                    currentNodeId,
+                                    presOption
+                                ))
+                            }
+                            .show()
+                        
                         close()
                         true
                     }
