@@ -3,7 +3,11 @@ package com.lmizuno.smallnotesmanager.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.lmizuno.smallnotesmanager.R
 import com.lmizuno.smallnotesmanager.models.Node
@@ -16,6 +20,7 @@ class NodesPresentationAdapter(private var nodes: List<Node>, private val markwo
 
     inner class Pager2ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val content: TextView = itemView.findViewById(R.id.pageTextView)
+        val scrollView: View = itemView.findViewById(R.id.pageScrollview)
         val title: TextView = itemView.findViewById(R.id.pageTitle)
     }
 
@@ -35,9 +40,19 @@ class NodesPresentationAdapter(private var nodes: List<Node>, private val markwo
         holder.title.text = nodes[position].name
         when {
             nodes[position].type == NodeType.FOLDER -> {
-                //val folder = nodes[position] as Folder
+                // Hide content for folders and center the title
+                holder.scrollView.visibility = View.GONE
+                holder.title.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+                }
             }
             nodes[position].type == NodeType.NOTE -> {
+                // Show content for notes
+                holder.scrollView.visibility = View.VISIBLE
+                holder.title.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    bottomToBottom = ConstraintLayout.LayoutParams.UNSET
+                }
+                //holder.title.textAlignment = View.TEXT_ALIGNMENT_TEXT_START
                 val note = nodes[position] as Note
                 note.content.let { markwon.setMarkdown(holder.content, it) }
             }
