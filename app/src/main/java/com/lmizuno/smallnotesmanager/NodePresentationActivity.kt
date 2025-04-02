@@ -26,8 +26,6 @@ class NodePresentationActivity : AppCompatActivity() {
     private lateinit var indicator: CircleIndicator3
 
     private var currentFolderId: String? = null
-    private var presentationOption: Int? = 0
-    private var notes: List<Note> = emptyList()
 
     companion object {
         const val EXTRA_FOLDER_ID = "folder_id"
@@ -66,6 +64,7 @@ class NodePresentationActivity : AppCompatActivity() {
         viewpager = findViewById(R.id.note_view)
         indicator = findViewById(R.id.page_indicator)
         indicator.setViewPager(viewpager)
+        supportActionBar?.hide()
 
         // Load notes based on presentation option
         when (presOption) {
@@ -80,10 +79,8 @@ class NodePresentationActivity : AppCompatActivity() {
         // Observe nodes LiveData
         viewModel.nodes.observe(this) { nodes ->
             // Filter to only include notes
-            notes = nodes.filterIsInstance<Note>()
-
-            if (notes.isNotEmpty()) {
-                viewpager.adapter = NodesPresentationAdapter(notes, markwon)
+            if (nodes.isNotEmpty()) {
+                viewpager.adapter = NodesPresentationAdapter(nodes.filterIsInstance<Note>(), markwon)
             }
         }
 
@@ -99,10 +96,8 @@ class NodePresentationActivity : AppCompatActivity() {
     private fun loadNotesRecursively() {
         viewModel.loadNodesRecursively(currentFolderId) { allNodes ->
             // Filter to only include notes
-            notes = allNodes.filterIsInstance<Note>()
-
-            if (notes.isNotEmpty()) {
-                viewpager.adapter = NodesPresentationAdapter(notes, markwon)
+            if (allNodes.isNotEmpty()) {
+                viewpager.adapter = NodesPresentationAdapter(allNodes, markwon)
                 indicator.setViewPager(viewpager)
             } else {
                 Toast.makeText(this, getString(R.string.no_notes_to_display), Toast.LENGTH_SHORT)

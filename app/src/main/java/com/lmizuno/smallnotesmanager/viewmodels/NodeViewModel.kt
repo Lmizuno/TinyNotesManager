@@ -6,8 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.lmizuno.smallnotesmanager.models.Folder
 import com.lmizuno.smallnotesmanager.models.Node
+import com.lmizuno.smallnotesmanager.models.NodeType
 import com.lmizuno.smallnotesmanager.repositories.NodeRepository
 import kotlinx.coroutines.launch
 
@@ -181,15 +181,14 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val allNodes = mutableListOf<Node>()
 
-                // First, get the nodes at this level
                 val currentLevelNodes = nodeRepository.queryNodesByParent(parentId)
-                allNodes.addAll(currentLevelNodes)
 
-                // Then, for each folder, recursively get its children
-                val folders = currentLevelNodes.filterIsInstance<Folder>()
-                for (folder in folders) {
-                    val childNodes = nodeRepository.queryNodesRecursively(folder.id)
-                    allNodes.addAll(childNodes)
+                for (node in currentLevelNodes) {
+                    allNodes.add(node)
+                    if (node.type == NodeType.FOLDER) {
+                        val childNodes = nodeRepository.queryNodesRecursively(node.id)
+                        allNodes.addAll(childNodes)
+                    }
                 }
 
                 onComplete(allNodes)

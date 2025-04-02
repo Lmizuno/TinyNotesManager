@@ -11,11 +11,12 @@ class Note(
     updatedAt: Long = System.currentTimeMillis(),
     var content: String = "",
     var attachments: List<Attachment> = emptyList()
-) : Node(id, name, parentId, createdAt, updatedAt) {
+) : Node(id, name, parentId, createdAt, updatedAt, NodeType.NOTE) {
     override fun toMap(): Map<String, Any> {
-        return mutableMapOf("id" to id,
+        return mutableMapOf(
+            "id" to id,
             "name" to name,
-            "type" to NodeType.NOTE.name,
+            "type" to type.name,
             "content" to content,
             "createdAt" to createdAt,
             "updatedAt" to updatedAt,

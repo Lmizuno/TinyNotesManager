@@ -7,13 +7,13 @@ class Folder(
     createdAt: Long = System.currentTimeMillis(),
     updatedAt: Long = System.currentTimeMillis(),
     var description: String = ""
-) : Node(id, name, parentId, createdAt, updatedAt) {
+) : Node(id, name, parentId, createdAt, updatedAt, NodeType.FOLDER) {
     override fun toMap(): Map<String, Any> {
         return mutableMapOf(
             "id" to id,
             "name" to name,
             "description" to description,
-            "type" to NodeType.FOLDER.name,
+            "type" to type.name,
             "createdAt" to createdAt,
             "updatedAt" to updatedAt
         ).apply {

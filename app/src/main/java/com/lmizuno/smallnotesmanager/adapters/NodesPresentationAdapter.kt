@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.lmizuno.smallnotesmanager.R
+import com.lmizuno.smallnotesmanager.models.Node
+import com.lmizuno.smallnotesmanager.models.NodeType
 import com.lmizuno.smallnotesmanager.models.Note
 import io.noties.markwon.Markwon
 
-class NodesPresentationAdapter(private var notes: List<Note>, private val markwon: Markwon) :
+class NodesPresentationAdapter(private var nodes: List<Node>, private val markwon: Markwon) :
     RecyclerView.Adapter<NodesPresentationAdapter.Pager2ViewHolder>() {
 
     inner class Pager2ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -30,11 +32,19 @@ class NodesPresentationAdapter(private var notes: List<Note>, private val markwo
         holder: NodesPresentationAdapter.Pager2ViewHolder,
         position: Int
     ) {
-        notes[position].content.let { markwon.setMarkdown(holder.content, it) }
-        holder.title.text = notes[position].name
+        holder.title.text = nodes[position].name
+        when {
+            nodes[position].type == NodeType.FOLDER -> {
+                //val folder = nodes[position] as Folder
+            }
+            nodes[position].type == NodeType.NOTE -> {
+                val note = nodes[position] as Note
+                note.content.let { markwon.setMarkdown(holder.content, it) }
+            }
+        }
     }
 
     override fun getItemCount(): Int {
-        return notes.size
+        return nodes.size
     }
 }
