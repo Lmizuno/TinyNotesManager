@@ -6,8 +6,9 @@ class Folder(
     parentId: String?,
     createdAt: Long = System.currentTimeMillis(),
     updatedAt: Long = System.currentTimeMillis(),
-    var description: String = ""
-) : Node(id, name, parentId, createdAt, updatedAt, NodeType.FOLDER) {
+    var description: String = "",
+    order: Long = 0
+) : Node(id, name, parentId, createdAt, updatedAt, order, NodeType.FOLDER) {
     override fun toMap(): Map<String, Any> {
         return mutableMapOf(
             "id" to id,
@@ -15,7 +16,8 @@ class Folder(
             "description" to description,
             "type" to type.name,
             "createdAt" to createdAt,
-            "updatedAt" to updatedAt
+            "updatedAt" to updatedAt,
+            "order" to order
         ).apply {
             parentId?.let { this["parent"] = it }
         }
@@ -29,7 +31,8 @@ class Folder(
                 parentId = map["parent"] as? String,
                 createdAt = map["createdAt"] as? Long ?: System.currentTimeMillis(),
                 updatedAt = map["updatedAt"] as? Long ?: System.currentTimeMillis(),
-                description = map["description"] as? String ?: ""
+                description = map["description"] as? String ?: "",
+                order = (map["order"] as? Long) ?: 0
             )
         }
     }

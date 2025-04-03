@@ -10,8 +10,9 @@ class Note(
     createdAt: Long = System.currentTimeMillis(),
     updatedAt: Long = System.currentTimeMillis(),
     var content: String = "",
-    var attachments: List<Attachment> = emptyList()
-) : Node(id, name, parentId, createdAt, updatedAt, NodeType.NOTE) {
+    var attachments: List<Attachment> = emptyList(),
+    order: Long = 0
+) : Node(id, name, parentId, createdAt, updatedAt, order, NodeType.NOTE) {
     override fun toMap(): Map<String, Any> {
         return mutableMapOf(
             "id" to id,
@@ -20,7 +21,9 @@ class Note(
             "content" to content,
             "createdAt" to createdAt,
             "updatedAt" to updatedAt,
-            "attachments" to attachments.map { it.toMap() }).apply {
+            "order" to order,
+            "attachments" to attachments.map { it.toMap() }
+        ).apply {
             parentId?.let { this["parent"] = it }
         }
     }
@@ -48,7 +51,8 @@ class Note(
                 createdAt = map["createdAt"] as? Long ?: System.currentTimeMillis(),
                 updatedAt = map["updatedAt"] as? Long ?: System.currentTimeMillis(),
                 content = map["content"] as? String ?: "",
-                attachments = attachmentsList
+                attachments = attachmentsList,
+                order = (map["order"] as? Long) ?: 0
             )
         }
     }

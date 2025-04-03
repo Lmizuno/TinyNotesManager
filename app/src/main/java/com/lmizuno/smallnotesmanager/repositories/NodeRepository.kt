@@ -133,19 +133,34 @@ class NodeRepository(context: Context) {
     }
 
     /**
+     * Adds this method to get next available order for a parent
+     */
+    private suspend fun getNextOrder(parentId: String?): Long = withContext(Dispatchers.IO) {
+        try {
+            val nodes = queryNodesByParent(parentId)
+            return@withContext if (nodes.isEmpty()) 0L else nodes.maxOf { it.order } + 1
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting next order", e)
+            return@withContext 0L
+        }
+    }
+
+    /**
      * Creates a new folder with the given details.
      */
     suspend fun createFolder(name: String, description: String, parentId: String?): Folder? =
         withContext(Dispatchers.IO) {
             try {
                 val folderId = UUID.randomUUID().toString()
+                val order = getNextOrder(parentId)
                 val folder = Folder(
                     id = folderId,
                     name = name,
                     parentId = parentId,
                     description = description,
                     createdAt = System.currentTimeMillis(),
-                    updatedAt = System.currentTimeMillis()
+                    updatedAt = System.currentTimeMillis(),
+                    order = order
                 )
 
                 if (saveNode(folder)) {
@@ -166,13 +181,15 @@ class NodeRepository(context: Context) {
         withContext(Dispatchers.IO) {
             try {
                 val noteId = UUID.randomUUID().toString()
+                val order = getNextOrder(parentId)
                 val note = Note(
                     id = noteId,
                     name = name,
                     parentId = parentId,
                     content = content,
                     createdAt = System.currentTimeMillis(),
-                    updatedAt = System.currentTimeMillis()
+                    updatedAt = System.currentTimeMillis(),
+                    order = order
                 )
 
                 if (saveNode(note)) {
@@ -207,15 +224,16 @@ class NodeRepository(context: Context) {
             """.trimIndent()
             )
 
-            query.execute().allResults().mapNotNull { result ->
+            val nodes = query.execute().allResults().mapNotNull { result ->
                 val docId = result.getDictionary(0)?.getString("id") ?: return@mapNotNull null
 
                 database.getDocument(docId)?.let { doc ->
                     NodeFactory.fromDocument(doc)
                 }
-            }.also { nodes ->
-                Log.d(TAG, "Query returned ${nodes.size} nodes")
             }
+            
+            // Sort nodes by order
+            return@withContext nodes.sortedBy { it.order }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to query nodes by parent", e)
             emptyList()
@@ -265,5 +283,24 @@ class NodeRepository(context: Context) {
         }
         
         result
+    }
+
+    /**
+     * Adds this method to update orders for a list of nodes
+     */
+    suspend fun updateNodesOrder(nodes: List<Node>): Boolean = withContext(Dispatchers.IO) {
+        try {
+            var success = true
+            for (node in nodes) {
+                node.updatedAt = System.currentTimeMillis()
+                if (!updateNode(node)) {
+                    success = false
+                }
+            }
+            return@withContext success
+        } catch (e: Exception) {
+            Log.e(TAG, "Error updating nodes order", e)
+            return@withContext false
+        }
     }
 } 

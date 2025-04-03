@@ -13,8 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.lmizuno.smallnotesmanager.adapters.NodeAdapter
+import com.lmizuno.smallnotesmanager.adapters.NodeMoveCallback
 import com.lmizuno.smallnotesmanager.databinding.ActivityNodeBinding
 import com.lmizuno.smallnotesmanager.models.Folder
 import com.lmizuno.smallnotesmanager.models.Node
@@ -62,7 +64,8 @@ class NodeActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        nodeAdapter = NodeAdapter(emptyList()) { node ->
+        val nodesList = mutableListOf<Node>()
+        nodeAdapter = NodeAdapter(nodesList) { node ->
             when (node) {
                 is Folder -> {
                     startActivity(createIntent(this, node.id))
@@ -79,9 +82,19 @@ class NodeActivity : AppCompatActivity() {
                 }
             }
         }
-
+        
+        // Set the ViewModel for the adapter
+        nodeAdapter.setViewModel(viewModel)
+        
         binding.recyclerNodes.layoutManager = LinearLayoutManager(this)
         binding.recyclerNodes.adapter = nodeAdapter
+
+        // Attach the ItemTouchHelper with our custom callback
+        val callback = NodeMoveCallback(nodeAdapter)
+        val touchHelper = ItemTouchHelper(callback)
+        touchHelper.attachToRecyclerView(binding.recyclerNodes)
+        
+        // No need for edit mode toggle - dragging works via long press
     }
 
     private fun setupObservers() {

@@ -201,4 +201,26 @@ class NodeViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+    /**
+     * Updates node orders
+     */
+    fun updateNodesOrder(nodes: List<Node>, onComplete: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val success = nodeRepository.updateNodesOrder(nodes)
+                if (success) {
+                    // Only reload if necessary - adapter already shows correct order
+                    onComplete(true)
+                } else {
+                    _error.value = "Failed to update nodes order"
+                    onComplete(false)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error updating nodes order", e)
+                _error.value = e.message
+                onComplete(false)
+            }
+        }
+    }
 } 

@@ -10,6 +10,7 @@ abstract class Node(
     var parentId: String?,
     val createdAt: Long,
     var updatedAt: Long,
+    var order: Long,
     val type: NodeType
 ) {
     abstract fun toMap(): Map<String, Any>
