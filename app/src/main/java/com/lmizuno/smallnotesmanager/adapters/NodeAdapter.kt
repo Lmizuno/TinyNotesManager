@@ -100,13 +100,15 @@ class NodeAdapter(
     }
 
     override fun onRowSelected(myViewHolder: NodeViewHolder?) {
-        myViewHolder?.binding?.root?.setBackgroundColor(Color.LTGRAY)
+        myViewHolder?.binding?.root?.setBackgroundColor(
+            myViewHolder.binding.root.context.getColor(R.color.item_selected)
+        )
     }
 
     override fun onRowClear(myViewHolder: NodeViewHolder?) {
-        myViewHolder?.binding?.root?.let { view ->
-            view.background = null
-        }
+        myViewHolder?.binding?.root?.setBackgroundColor(
+            myViewHolder.binding.root.context.getColor(R.color.item_background)
+        )
     }
 
     // Add method to commit order changes
