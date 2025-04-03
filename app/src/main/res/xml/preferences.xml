@@ -2,14 +2,30 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:fitsSystemWindows="true">
 
-    <PreferenceCategory android:title="General">
+    <PreferenceCategory android:title="Application Settings">
+        <ListPreference
+            android:defaultValue="system"
+            android:entries="@array/theme_entries"
+            android:entryValues="@array/theme_values"
+            android:key="app_theme"
+            android:summary="Choose light, dark, or system default theme"
+            android:title="App Theme" />
+            
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="show_descriptions"
+            android:summary="Show item descriptions in lists"
+            android:title="Show Descriptions" />
+    </PreferenceCategory>
+
+    <!-- <PreferenceCategory android:title="General">
         <SwitchPreference
             android:defaultValue="false"
             android:key="dark_mode"
             android:summary="@string/theme_mode_toggle"
             android:title="@string/dark_mode" />
 
-    </PreferenceCategory>
+    </PreferenceCategory> -->
 
     <PreferenceCategory android:title="@string/about">
         <Preference
