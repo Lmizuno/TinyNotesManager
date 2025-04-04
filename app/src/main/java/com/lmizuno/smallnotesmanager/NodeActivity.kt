@@ -22,6 +22,7 @@ import com.lmizuno.smallnotesmanager.adapters.NodeMoveCallback
 import com.lmizuno.smallnotesmanager.databinding.ActivityNodeBinding
 import com.lmizuno.smallnotesmanager.models.Folder
 import com.lmizuno.smallnotesmanager.models.Node
+import com.lmizuno.smallnotesmanager.utils.ThemeManager
 import com.lmizuno.smallnotesmanager.viewmodels.NodeViewModel
 
 class NodeActivity : AppCompatActivity() {
@@ -52,6 +53,7 @@ class NodeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityNodeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ThemeManager.getInstance(this).applyTheme()
 
         // Initialize ViewModel
         viewModel = ViewModelProvider(this)[NodeViewModel::class.java]

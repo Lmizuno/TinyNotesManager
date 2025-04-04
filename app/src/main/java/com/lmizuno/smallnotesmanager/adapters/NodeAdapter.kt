@@ -1,6 +1,5 @@
 package com.lmizuno.smallnotesmanager.adapters
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -45,7 +44,7 @@ class NodeAdapter(
                 )
                 // Set icon color to secondary
                 setColorFilter(
-                    context.getColor(R.color.primary), android.graphics.PorterDuff.Mode.SRC_IN
+                    context.getColor(R.color.secondary), android.graphics.PorterDuff.Mode.SRC_IN
                 )
             }
 
