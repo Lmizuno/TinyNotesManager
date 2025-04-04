@@ -21,41 +21,21 @@
     <!-- THEME -->
     <!-- PRIMARY COLOR SETTINGS -->
     <color name="primary">#1A4B63</color>
-    <color name="primary_faded">#CFE6F2</color>
     <color name="primary_variant">#346E83</color>
-    <color name="primary_variant_faded">#D3E7EE</color>
     <color name="color_on_primary">#FFFFFFFF</color>
 
     <!-- SECONDARY COLOR SETTINGS -->
     <color name="secondary">#B22E3B</color>
-    <color name="secondary_faded">#F2CED2</color>
     <color name="secondary_variant">#9B344A</color>
-    <color name="secondary_variant_faded">#F0D1D8</color>
     <color name="color_on_secondary">#FFFFFFFF</color>
 
     <!-- FADED TINTS -->
+    <color name="primary_faded">#CFE6F2</color>
+    <color name="primary_variant_faded">#D3E7EE</color>
+    <color name="secondary_faded">#F2CED2</color>
+    <color name="secondary_variant_faded">#F0D1D8</color>
     <color name="columbia_blue">#CCE6F4</color>
     <color name="uranian_blue">#A5CFE6</color>
     <color name="baby_blue">#E0F3FF</color>
     <color name="paper">#f4f0e8</color>
-
-    <color name="item_selected">#E0E0E0</color>
-    <color name="item_background">@android:color/transparent</color>
-
-    <color name="icon_color">#9B344A</color>
-
-    <!-- DARK THEME -->
-    <!-- PRIMARY COLOR SETTINGS -->
-    <color name="primary_dark">#306788</color>
-    <color name="primary_variant_dark">#184859</color>
-    <color name="color_on_primary_dark">#FFFFFFFF</color>
-
-    <!-- SECONDARY COLOR SETTINGS -->
-    <color name="secondary_dark">#88353C</color>
-    <color name="secondary_variant_dark">#4E1220</color>
-    <color name="color_on_secondary_dark">#FFFFFFFF</color>
-
-    <!-- Add these specific for item highlighting -->
-    <color name="item_selected_dark">#88353C</color>
-    <color name="item_background_dark">@android:color/transparent</color>
 </resources>

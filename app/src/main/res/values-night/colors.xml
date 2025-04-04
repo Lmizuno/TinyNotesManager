@@ -1,0 +1,17 @@
+<resources>
+    <!-- Dark theme colors -->
+    <color name="primary">#011015</color>
+    <color name="primary_variant">#021E2D</color>
+    <color name="color_on_primary">#FFFFFFFF</color>
+
+    <!-- SECONDARY COLOR SETTINGS -->
+    <color name="secondary">#180106</color>
+    <color name="secondary_variant">#1A0103</color>
+    <color name="color_on_secondary">#FFFFFFFF</color>
+
+    <!-- FADED -->
+    <color name="primary_faded">#042733</color>
+    <color name="primary_variant_faded">#084465</color>
+    <color name="secondary_faded">#B35066</color>
+    <color name="secondary_variant_faded">#793237</color>
+</resources> 

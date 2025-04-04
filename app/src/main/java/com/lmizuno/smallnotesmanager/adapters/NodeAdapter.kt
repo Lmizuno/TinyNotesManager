@@ -1,12 +1,16 @@
 package com.lmizuno.smallnotesmanager.adapters
 
+import android.content.Context
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.AttrRes
 import androidx.recyclerview.widget.RecyclerView
 import com.lmizuno.smallnotesmanager.R
 import com.lmizuno.smallnotesmanager.databinding.ItemNodeBinding
 import com.lmizuno.smallnotesmanager.models.Folder
 import com.lmizuno.smallnotesmanager.models.Node
+import com.lmizuno.smallnotesmanager.utils.getColorFromAttr
 import com.lmizuno.smallnotesmanager.viewmodels.NodeViewModel
 import java.time.LocalTime
 import java.util.Collections
@@ -43,9 +47,8 @@ class NodeAdapter(
                     }
                 )
                 // Set icon color to secondary
-                setColorFilter(
-                    context.getColor(R.color.secondary), android.graphics.PorterDuff.Mode.SRC_IN
-                )
+                val iconColor = binding.root.context.getColorFromAttr(R.attr.iconTint)
+                setColorFilter(iconColor, android.graphics.PorterDuff.Mode.SRC_IN)
             }
 
             binding.root.setOnClickListener { onNodeClick(node) }
@@ -100,13 +103,13 @@ class NodeAdapter(
 
     override fun onRowSelected(myViewHolder: NodeViewHolder?) {
         myViewHolder?.binding?.root?.setBackgroundColor(
-            myViewHolder.binding.root.context.getColor(R.color.item_selected)
+            myViewHolder.binding.root.context.getColorFromAttr(R.attr.colorPrimarySurface)
         )
     }
 
     override fun onRowClear(myViewHolder: NodeViewHolder?) {
         myViewHolder?.binding?.root?.setBackgroundColor(
-            myViewHolder.binding.root.context.getColor(R.color.item_background)
+            myViewHolder.binding.root.context.getColorFromAttr(R.attr.colorOnBackground)
         )
     }
 

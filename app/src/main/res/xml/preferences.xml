@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:fitsSystemWindows="true">
-
-    <PreferenceCategory android:title="Application Settings">
+    <PreferenceCategory android:title="Application Settings"
+        android:layout="@layout/preferences_category">
         <ListPreference
             android:defaultValue="system"
             android:entries="@array/theme_entries"
@@ -27,7 +27,7 @@
 
     </PreferenceCategory> -->
 
-    <PreferenceCategory android:title="@string/about">
+    <PreferenceCategory android:title="@string/about" android:layout="@layout/preferences_category">
         <Preference
             android:key="app_version"
             android:summary="1.0.0"
