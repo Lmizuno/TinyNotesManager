@@ -14,4 +14,10 @@
     <color name="primary_variant_faded">#084465</color>
     <color name="secondary_faded">#B35066</color>
     <color name="secondary_variant_faded">#793237</color>
+
+    <color name="chip_background">@color/primary_variant_faded</color>
+    <color name="chip_text">@color/white</color>
+    <color name="chip_selected_background">@color/secondary_variant_faded</color>
+    <color name="chip_selected_text">@color/white</color>
+    <color name="chip_ripple">@color/gray</color>
 </resources> 

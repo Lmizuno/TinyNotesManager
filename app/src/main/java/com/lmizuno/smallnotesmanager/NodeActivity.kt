@@ -385,6 +385,19 @@ class NodeActivity : AppCompatActivity() {
             isCheckable = false
             isClickable = true
             
+            // Style the home chip
+            setChipBackgroundColorResource(R.color.chip_background)
+            setTextColor(ResourcesCompat.getColor(resources, R.color.chip_text, theme))
+            
+            // Add ripple effect
+            setRippleColorResource(R.color.chip_ripple)
+            
+            // Highlight if we're at root
+            if (currentNodeId == null) {
+                setChipBackgroundColorResource(R.color.chip_selected_background)
+                setTextColor(ResourcesCompat.getColor(resources, R.color.chip_selected_text, theme))
+            }
+            
             // Navigate to root when clicked
             setOnClickListener {
                 navigateToFolder(null)
@@ -393,11 +406,26 @@ class NodeActivity : AppCompatActivity() {
         chipGroup.addView(homeChip)
         
         // Add path chips
-        for (item in path) {
+        for ((index, item) in path.withIndex()) {
+            val isLastItem = index == path.size - 1
+            
             val chip = Chip(this).apply {
                 text = item.name
                 isCheckable = false
                 isClickable = true
+                
+                // Style the chip
+                setChipBackgroundColorResource(R.color.chip_background)
+                setTextColor(ResourcesCompat.getColor(resources, R.color.chip_text, theme))
+                
+                // Add ripple effect
+                setRippleColorResource(R.color.chip_ripple)
+                
+                // Highlight the current folder
+                if (isLastItem) {
+                    setChipBackgroundColorResource(R.color.chip_selected_background)
+                    setTextColor(ResourcesCompat.getColor(resources, R.color.chip_selected_text, theme))
+                }
                 
                 // Navigate to this folder when clicked
                 setOnClickListener {
