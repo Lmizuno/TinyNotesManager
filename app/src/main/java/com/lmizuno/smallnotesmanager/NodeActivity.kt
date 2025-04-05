@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
+import android.widget.HorizontalScrollView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -16,12 +17,15 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import com.google.android.material.chip.Chip
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.lmizuno.smallnotesmanager.adapters.NodeAdapter
 import com.lmizuno.smallnotesmanager.adapters.NodeMoveCallback
 import com.lmizuno.smallnotesmanager.databinding.ActivityNodeBinding
+import com.lmizuno.smallnotesmanager.models.BreadcrumbItem
 import com.lmizuno.smallnotesmanager.models.Folder
 import com.lmizuno.smallnotesmanager.models.Node
+import com.lmizuno.smallnotesmanager.utils.BreadcrumbManager
 import com.lmizuno.smallnotesmanager.utils.ThemeManager
 import com.lmizuno.smallnotesmanager.viewmodels.NodeViewModel
 
@@ -30,6 +34,7 @@ class NodeActivity : AppCompatActivity() {
     private lateinit var viewModel: NodeViewModel
     private var currentNodeId: String? = null
     private lateinit var nodeAdapter: NodeAdapter
+    private lateinit var breadcrumbManager: BreadcrumbManager
 
     private val editorActivityResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -57,6 +62,7 @@ class NodeActivity : AppCompatActivity() {
 
         // Initialize ViewModel
         viewModel = ViewModelProvider(this)[NodeViewModel::class.java]
+        breadcrumbManager = BreadcrumbManager.getInstance(this)
 
         currentNodeId = intent.getStringExtra(EXTRA_PARENT_ID)
         
@@ -369,14 +375,51 @@ class NodeActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateBreadcrumbUI(path: List<BreadcrumbItem>) {
+        val chipGroup = binding.breadcrumbChipGroup
+        chipGroup.removeAllViews()
+        
+        // Add home chip
+        val homeChip = Chip(this).apply {
+            text = getString(R.string.title_home)
+            isCheckable = false
+            isClickable = false  // We'll make these clickable in a future phase
+        }
+        chipGroup.addView(homeChip)
+        
+        // Add path chips
+        for (item in path) {
+            val chip = Chip(this).apply {
+                text = item.name
+                isCheckable = false
+                isClickable = false  // We'll make these clickable in a future phase
+            }
+            chipGroup.addView(chip)
+        }
+        
+        // Scroll to the end to show the current location
+        binding.breadcrumbScrollView.post {
+            binding.breadcrumbScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
+        }
+    }
+
     private fun updateUI(nodes: List<Node>) {
         // If we're at root level show "Home", otherwise show the folder name
         if (currentNodeId == null) {
             supportActionBar?.title = getString(R.string.title_home)
+            // Clear breadcrumb path when at root
+            breadcrumbManager.clearPath()
+            updateBreadcrumbUI(emptyList())
         } else {
             // Get the folder name using the parent ID
             viewModel.getNode(currentNodeId!!) { node ->
                 supportActionBar?.title = node?.name ?: getString(R.string.folder)
+                
+                // Update breadcrumb path
+                if (node != null) {
+                    val path = breadcrumbManager.navigateToFolder(node.id, node.name)
+                    updateBreadcrumbUI(path)
+                }
             }
         }
 
