@@ -52,4 +52,5 @@
     <string name="no_notes_to_display">No notes to display in this folder</string>
     <string name="note_deep_pres_mode">Deep View</string>
     <string name="choose_presentation_mode">Choose your presentation mode</string>
+    <string name="node_type_icon" translatable="false">Node type icon</string>
 </resources>

@@ -383,7 +383,12 @@ class NodeActivity : AppCompatActivity() {
         val homeChip = Chip(this).apply {
             text = getString(R.string.title_home)
             isCheckable = false
-            isClickable = false  // We'll make these clickable in a future phase
+            isClickable = true
+            
+            // Navigate to root when clicked
+            setOnClickListener {
+                navigateToFolder(null)
+            }
         }
         chipGroup.addView(homeChip)
         
@@ -392,7 +397,12 @@ class NodeActivity : AppCompatActivity() {
             val chip = Chip(this).apply {
                 text = item.name
                 isCheckable = false
-                isClickable = false  // We'll make these clickable in a future phase
+                isClickable = true
+                
+                // Navigate to this folder when clicked
+                setOnClickListener {
+                    navigateToFolder(item.id)
+                }
             }
             chipGroup.addView(chip)
         }
@@ -401,6 +411,25 @@ class NodeActivity : AppCompatActivity() {
         binding.breadcrumbScrollView.post {
             binding.breadcrumbScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
         }
+    }
+
+    private fun navigateToFolder(folderId: String?) {
+        // If we're already at this folder, do nothing
+        if (folderId == currentNodeId) return
+        
+        // If navigating to root from a subfolder, finish this activity
+        if (folderId == null) {
+            // TODO: we need to finish() the whole stack of activities.
+            finish()
+            return
+        }
+        
+        // Otherwise, start a new NodeActivity with the selected folder as parent
+        val intent = Intent(this, NodeActivity::class.java).apply {
+            // TODO: we should MAYBE just finish the activity stack until we reach there. but making a new one might not be that bad, if we can quickly swap between distant folders.
+            putExtra(EXTRA_PARENT_ID, folderId)
+        }
+        startActivity(intent)
     }
 
     private fun updateUI(nodes: List<Node>) {
@@ -417,8 +446,9 @@ class NodeActivity : AppCompatActivity() {
                 
                 // Update breadcrumb path
                 if (node != null) {
-                    val path = breadcrumbManager.navigateToFolder(node.id, node.name)
-                    updateBreadcrumbUI(path)
+                    breadcrumbManager.navigateToFolder(node.id) { path ->
+                        updateBreadcrumbUI(path)
+                    }
                 }
             }
         }

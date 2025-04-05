@@ -2,7 +2,6 @@ package com.lmizuno.smallnotesmanager
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.activity.OnBackPressedDispatcher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.ListPreference
 import androidx.preference.Preference

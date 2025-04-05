@@ -2,15 +2,25 @@ package com.lmizuno.smallnotesmanager.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.lmizuno.smallnotesmanager.models.BreadcrumbItem
+import com.lmizuno.smallnotesmanager.repositories.NodeRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import androidx.core.content.edit
 
 class BreadcrumbManager(context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     private val gson = Gson()
+    private val nodeRepository = NodeRepository.getInstance(context)
+    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     companion object {
+        private const val TAG = "BreadcrumbManager"
         private const val PREFS_NAME = "breadcrumb_prefs"
         private const val KEY_CURRENT_PATH = "current_breadcrumb_path"
 
@@ -32,38 +42,65 @@ class BreadcrumbManager(context: Context) {
     }
 
     // Save the current breadcrumb path
-    fun savePath(path: List<BreadcrumbItem>) {
+    private fun savePath(path: List<BreadcrumbItem>) {
         val json = gson.toJson(path)
-        prefs.edit().putString(KEY_CURRENT_PATH, json).apply()
+        prefs.edit { putString(KEY_CURRENT_PATH, json) }
     }
 
-    // Update the path when navigating to a folder
-    fun navigateToFolder(folderId: String?, folderName: String): List<BreadcrumbItem> {
-        val currentPath = getCurrentPath().toMutableList()
-
-        // If navigating to root, clear the path
+    // Build the full path for a folder
+    private fun buildFullPath(folderId: String?, callback: (List<BreadcrumbItem>) -> Unit) {
         if (folderId == null) {
-            currentPath.clear()
-        } else {
-            // Check if we're already in the path (navigating up)
-            val existingIndex = currentPath.indexOfFirst { it.id == folderId }
-            if (existingIndex != -1) {
-                // Truncate the path at this point
-                while (currentPath.size > existingIndex + 1) {
-                    currentPath.removeAt(currentPath.size - 1)
+            callback(emptyList())
+            return
+        }
+        
+        coroutineScope.launch {
+            try {
+                val path = mutableListOf<BreadcrumbItem>()
+                var currentId = folderId
+                
+                // Build path from current folder up to root
+                while (currentId != null) {
+                    val node = withContext(Dispatchers.IO) {
+                        nodeRepository.getNode(currentId!!)
+                    }
+                    
+                    if (node != null) {
+                        // Add to beginning of list (we're working backwards from current to root)
+                        path.add(0, BreadcrumbItem(node.id, node.name))
+                        currentId = node.parentId
+                    } else {
+                        // Node not found, break the loop
+                        break
+                    }
                 }
-            } else {
-                // Add the new folder to the path
-                currentPath.add(BreadcrumbItem(folderId, folderName))
+                
+                // Save the path and return it
+                savePath(path)
+                callback(path)
+            } catch (e: Exception) {
+                Log.e(TAG, "Error building folder path", e)
+                callback(emptyList())
             }
         }
+    }
 
-        savePath(currentPath)
-        return currentPath
+    // Overloaded method with callback for async usage
+    fun navigateToFolder(folderId: String?, callback: (List<BreadcrumbItem>) -> Unit) {
+        if (folderId == null) {
+            clearPath()
+            callback(emptyList())
+            return
+        }
+        
+        // Build the full path for this folder
+        buildFullPath(folderId) { path ->
+            callback(path)
+        }
     }
 
     // Clear the breadcrumb path
     fun clearPath() {
-        prefs.edit().remove(KEY_CURRENT_PATH).apply()
+        prefs.edit { remove(KEY_CURRENT_PATH) }
     }
 }
