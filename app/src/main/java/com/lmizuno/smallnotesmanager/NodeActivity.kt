@@ -5,10 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.HorizontalScrollView
+import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -18,6 +23,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.lmizuno.smallnotesmanager.adapters.NodeAdapter
 import com.lmizuno.smallnotesmanager.adapters.NodeMoveCallback
@@ -388,8 +395,6 @@ class NodeActivity : AppCompatActivity() {
             // Style the home chip
             setChipBackgroundColorResource(R.color.chip_background)
             setTextColor(ResourcesCompat.getColor(resources, R.color.chip_text, theme))
-            
-            // Add ripple effect
             setRippleColorResource(R.color.chip_ripple)
             
             // Highlight if we're at root
@@ -405,40 +410,116 @@ class NodeActivity : AppCompatActivity() {
         }
         chipGroup.addView(homeChip)
         
-        // Add path chips
-        for ((index, item) in path.withIndex()) {
-            val isLastItem = index == path.size - 1
+        // For deep hierarchies, use a truncated view
+        if (path.size > 4) {
+            // Add separator after home
+            // TODO: maybe add separator before each folder chip
             
-            val chip = Chip(this).apply {
-                text = item.name
+            // Add ellipsis chip for truncated folders
+            val ellipsisChip = Chip(this).apply {
+                text = "..."
                 isCheckable = false
                 isClickable = true
-                
-                // Style the chip
                 setChipBackgroundColorResource(R.color.chip_background)
                 setTextColor(ResourcesCompat.getColor(resources, R.color.chip_text, theme))
-                
-                // Add ripple effect
                 setRippleColorResource(R.color.chip_ripple)
                 
-                // Highlight the current folder
-                if (isLastItem) {
-                    setChipBackgroundColorResource(R.color.chip_selected_background)
-                    setTextColor(ResourcesCompat.getColor(resources, R.color.chip_selected_text, theme))
-                }
-                
-                // Navigate to this folder when clicked
-                setOnClickListener {
-                    navigateToFolder(item.id)
+                // Show a dropdown menu with all folders when clicked
+                setOnClickListener { view ->
+                    showPathDropdownMenu(view, path.dropLast(2))
                 }
             }
-            chipGroup.addView(chip)
+            chipGroup.addView(ellipsisChip)
+            
+            // Add separator after ellipsis
+            // TODO: maybe add separator before each folder chip
+            
+            // Show only the last 2 folders in the path
+            path.takeLast(2).forEachIndexed { index, item ->
+                val isLastItem = index == path.takeLast(2).size - 1
+                
+                val chip = Chip(this).apply {
+                    text = item.name
+                    isCheckable = false
+                    isClickable = true
+                    
+                    // Style the chip
+                    setChipBackgroundColorResource(R.color.chip_background)
+                    setTextColor(ResourcesCompat.getColor(resources, R.color.chip_text, theme))
+                    setRippleColorResource(R.color.chip_ripple)
+                    
+                    // Highlight the current folder
+                    if (isLastItem) {
+                        setChipBackgroundColorResource(R.color.chip_selected_background)
+                        setTextColor(ResourcesCompat.getColor(resources, R.color.chip_selected_text, theme))
+                    }
+                    
+                    // Navigate to this folder when clicked
+                    setOnClickListener {
+                        navigateToFolder(item.id)
+                    }
+                }
+                chipGroup.addView(chip)
+                
+                // Add separator after each chip except the last one
+                if (!isLastItem) {
+                    // TODO: maybe add separator before each folder chip
+                }
+            }
+        } else {
+            // For shorter paths, show all folders
+            for ((index, item) in path.withIndex()) {
+                // TODO: maybe add separator before each folder chip
+                
+                val isLastItem = index == path.size - 1
+                
+                val chip = Chip(this).apply {
+                    text = item.name
+                    isCheckable = false
+                    isClickable = true
+                    
+                    // Style the chip
+                    setChipBackgroundColorResource(R.color.chip_background)
+                    setTextColor(ResourcesCompat.getColor(resources, R.color.chip_text, theme))
+                    setRippleColorResource(R.color.chip_ripple)
+                    
+                    // Highlight the current folder
+                    if (isLastItem) {
+                        setChipBackgroundColorResource(R.color.chip_selected_background)
+                        setTextColor(ResourcesCompat.getColor(resources, R.color.chip_selected_text, theme))
+                    }
+                    
+                    // Navigate to this folder when clicked
+                    setOnClickListener {
+                        navigateToFolder(item.id)
+                    }
+                }
+                chipGroup.addView(chip)
+            }
         }
         
         // Scroll to the end to show the current location
         binding.breadcrumbScrollView.post {
             binding.breadcrumbScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
         }
+    }
+
+    private fun showPathDropdownMenu(view: View, items: List<BreadcrumbItem>) {
+        val popup = PopupMenu(this, view)
+        
+        // Add menu items for each folder in the truncated path
+        items.forEachIndexed { index, item ->
+            popup.menu.add(Menu.NONE, index, index, item.name)
+        }
+        
+        // Handle menu item clicks
+        popup.setOnMenuItemClickListener { menuItem ->
+            val selectedItem = items[menuItem.itemId]
+            navigateToFolder(selectedItem.id)
+            true
+        }
+        
+        popup.show()
     }
 
     private fun navigateToFolder(folderId: String?) {

@@ -24,7 +24,7 @@
                 android:id="@+id/breadcrumbChipGroup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:chipSpacing="4dp"
+                app:chipSpacingHorizontal="3dp"
                 app:singleLine="true" />
         </HorizontalScrollView>
 
@@ -32,7 +32,8 @@
             android:id="@+id/recycler_nodes"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp"
+            android:contentDescription="@string/list_of_items_inside_this_folder"/>
     </LinearLayout>
 
     <com.leinardi.android.speeddial.SpeedDialView
