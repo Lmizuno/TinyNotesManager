@@ -59,6 +59,10 @@ class NodeActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[NodeViewModel::class.java]
 
         currentNodeId = intent.getStringExtra(EXTRA_PARENT_ID)
+        
+        // Set up the back button in the action bar if not at root level
+        supportActionBar?.setDisplayHomeAsUpEnabled(currentNodeId != null)
+        
         setupRecyclerView()
         setupSpeedDial()
         setupObservers()
@@ -386,6 +390,11 @@ class NodeActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            android.R.id.home -> {
+                // Handle back button press using the non-deprecated approach
+                finish()
+                true
+            }
             R.id.action_settings -> {
                 // Launch settings activity
                 startActivity(Intent(this, SettingsActivity::class.java))

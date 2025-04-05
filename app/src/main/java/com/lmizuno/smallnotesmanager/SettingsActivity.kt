@@ -29,11 +29,6 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.title = getString(R.string.settings)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        OnBackPressedDispatcher()
-        return true
-    }
-
     class SettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.preferences, rootKey)
