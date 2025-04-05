@@ -92,9 +92,17 @@ class EditorFolderActivity : AppCompatActivity() {
             Toast.makeText(this, getString(R.string.please_add_a_name), Toast.LENGTH_SHORT).show()
             return false
         }
+        if (name.text!!.length > 25 ) {
+            Toast.makeText(this, getString(R.string.please_add_a_name), Toast.LENGTH_SHORT).show()
+            return false
+        }
         if (description.text.isNullOrEmpty()) {
             Toast.makeText(this, getString(R.string.please_add_a_description), Toast.LENGTH_SHORT)
                 .show()
+            return false
+        }
+        if (description.text!!.length > 50 ) {
+            Toast.makeText(this, getString(R.string.please_add_a_name), Toast.LENGTH_SHORT).show()
             return false
         }
         return true

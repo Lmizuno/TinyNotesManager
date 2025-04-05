@@ -5,26 +5,21 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.PopupMenu
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
-import com.google.android.material.shape.ShapeAppearanceModel
 import com.leinardi.android.speeddial.SpeedDialActionItem
 import com.lmizuno.smallnotesmanager.adapters.NodeAdapter
 import com.lmizuno.smallnotesmanager.adapters.NodeMoveCallback
@@ -72,10 +67,10 @@ class NodeActivity : AppCompatActivity() {
         breadcrumbManager = BreadcrumbManager.getInstance(this)
 
         currentNodeId = intent.getStringExtra(EXTRA_PARENT_ID)
-        
+
         // Set up the back button in the action bar if not at root level
         supportActionBar?.setDisplayHomeAsUpEnabled(currentNodeId != null)
-        
+
         setupRecyclerView()
         setupSpeedDial()
         setupObservers()
@@ -95,18 +90,16 @@ class NodeActivity : AppCompatActivity() {
                 else -> {
                     editorActivityResult.launch(
                         EditorNoteActivity.createIntent(
-                            this,
-                            noteId = node.id,
-                            parentId = currentNodeId
+                            this, noteId = node.id, parentId = currentNodeId
                         )
                     )
                 }
             }
         }
-        
+
         // Set the ViewModel for the adapter
         nodeAdapter.setViewModel(viewModel)
-        
+
         binding.recyclerNodes.layoutManager = LinearLayoutManager(this)
         binding.recyclerNodes.adapter = nodeAdapter
 
@@ -114,7 +107,7 @@ class NodeActivity : AppCompatActivity() {
         val callback = NodeMoveCallback(nodeAdapter)
         val touchHelper = ItemTouchHelper(callback)
         touchHelper.attachToRecyclerView(binding.recyclerNodes)
-        
+
         // No need for edit mode toggle - dragging works via long press
     }
 
@@ -209,13 +202,12 @@ class NodeActivity : AppCompatActivity() {
 
                 addActionItem(
                     SpeedDialActionItem.Builder(
-                        R.id.fab_delete_folder,
-                        R.drawable.baseline_delete_24
+                        R.id.fab_delete_folder, R.drawable.baseline_delete_24
                     ).setFabBackgroundColor(
-                            ResourcesCompat.getColor(
-                                resources, R.color.primary, theme
-                            )
-                        ).setLabel(R.string.delete_folder).setLabelColor(Color.WHITE)
+                        ResourcesCompat.getColor(
+                            resources, R.color.primary, theme
+                        )
+                    ).setLabel(R.string.delete_folder).setLabelColor(Color.WHITE)
                         .setLabelBackgroundColor(
                             ResourcesCompat.getColor(
                                 resources, R.color.primary, theme
@@ -256,8 +248,7 @@ class NodeActivity : AppCompatActivity() {
                     R.id.fab_add_note -> {
                         editorActivityResult.launch(
                             EditorNoteActivity.createIntent(
-                                this@NodeActivity,
-                                parentId = currentNodeId
+                                this@NodeActivity, parentId = currentNodeId
                             )
                         )
                         close()
@@ -301,8 +292,7 @@ class NodeActivity : AppCompatActivity() {
                                     builder.setView(dialogView)
                                         .setTitle(getString(R.string.confirm_deletion)).setMessage(
                                             getString(
-                                                R.string.delete_folder_confirmation,
-                                                node.name
+                                                R.string.delete_folder_confirmation, node.name
                                             )
                                         ).setPositiveButton(getString(R.string.delete)) { _, _ ->
                                             // Check if the entered text matches the folder name
@@ -310,8 +300,7 @@ class NodeActivity : AppCompatActivity() {
                                             if (enteredName == node.name) {
                                                 // Names match, proceed with deletion
                                                 viewModel.deleteNode(
-                                                    currentNodeId!!,
-                                                    node.parentId
+                                                    currentNodeId!!, node.parentId
                                                 ) { success ->
                                                     if (success) {
                                                         // Go back to parent folder
@@ -324,15 +313,13 @@ class NodeActivity : AppCompatActivity() {
                                                         // If we have a parent, navigate back to it
                                                         if (node.parentId != null) {
                                                             val intent = createIntent(
-                                                                this@NodeActivity,
-                                                                node.parentId
+                                                                this@NodeActivity, node.parentId
                                                             )
                                                             startActivity(intent)
                                                         } else {
                                                             // Otherwise go to root
                                                             val intent = createIntent(
-                                                                this@NodeActivity,
-                                                                null
+                                                                this@NodeActivity, null
                                                             )
                                                             startActivity(intent)
                                                         }
@@ -385,36 +372,36 @@ class NodeActivity : AppCompatActivity() {
     private fun updateBreadcrumbUI(path: List<BreadcrumbItem>) {
         val chipGroup = binding.breadcrumbChipGroup
         chipGroup.removeAllViews()
-        
+
         // Add home chip
         val homeChip = Chip(this).apply {
             text = getString(R.string.title_home)
             isCheckable = false
             isClickable = true
-            
+
             // Style the home chip
             setChipBackgroundColorResource(R.color.chip_background)
             setTextColor(ResourcesCompat.getColor(resources, R.color.chip_text, theme))
             setRippleColorResource(R.color.chip_ripple)
-            
+
             // Highlight if we're at root
             if (currentNodeId == null) {
                 setChipBackgroundColorResource(R.color.chip_selected_background)
                 setTextColor(ResourcesCompat.getColor(resources, R.color.chip_selected_text, theme))
             }
-            
+
             // Navigate to root when clicked
             setOnClickListener {
                 navigateToFolder(null)
             }
         }
         chipGroup.addView(homeChip)
-        
+
         // For deep hierarchies, use a truncated view
         if (path.size > 4) {
             // Add separator after home
             // TODO: maybe add separator before each folder chip
-            
+
             // Add ellipsis chip for truncated folders
             val ellipsisChip = Chip(this).apply {
                 text = "..."
@@ -423,44 +410,50 @@ class NodeActivity : AppCompatActivity() {
                 setChipBackgroundColorResource(R.color.chip_background)
                 setTextColor(ResourcesCompat.getColor(resources, R.color.chip_text, theme))
                 setRippleColorResource(R.color.chip_ripple)
-                
+
                 // Show a dropdown menu with all folders when clicked
                 setOnClickListener { view ->
                     showPathDropdownMenu(view, path.dropLast(2))
                 }
             }
             chipGroup.addView(ellipsisChip)
-            
+
             // Add separator after ellipsis
             // TODO: maybe add separator before each folder chip
-            
+
             // Show only the last 2 folders in the path
             path.takeLast(2).forEachIndexed { index, item ->
                 val isLastItem = index == path.takeLast(2).size - 1
-                
+
                 val chip = Chip(this).apply {
                     text = item.name
                     isCheckable = false
                     isClickable = true
-                    
+
                     // Style the chip
                     setChipBackgroundColorResource(R.color.chip_background)
                     setTextColor(ResourcesCompat.getColor(resources, R.color.chip_text, theme))
                     setRippleColorResource(R.color.chip_ripple)
-                    
+
                     // Highlight the current folder
                     if (isLastItem) {
                         setChipBackgroundColorResource(R.color.chip_selected_background)
-                        setTextColor(ResourcesCompat.getColor(resources, R.color.chip_selected_text, theme))
+                        setTextColor(
+                            ResourcesCompat.getColor(
+                                resources,
+                                R.color.chip_selected_text,
+                                theme
+                            )
+                        )
                     }
-                    
+
                     // Navigate to this folder when clicked
                     setOnClickListener {
                         navigateToFolder(item.id)
                     }
                 }
                 chipGroup.addView(chip)
-                
+
                 // Add separator after each chip except the last one
                 if (!isLastItem) {
                     // TODO: maybe add separator before each folder chip
@@ -470,25 +463,31 @@ class NodeActivity : AppCompatActivity() {
             // For shorter paths, show all folders
             for ((index, item) in path.withIndex()) {
                 // TODO: maybe add separator before each folder chip
-                
+
                 val isLastItem = index == path.size - 1
-                
+
                 val chip = Chip(this).apply {
                     text = item.name
                     isCheckable = false
                     isClickable = true
-                    
+
                     // Style the chip
                     setChipBackgroundColorResource(R.color.chip_background)
                     setTextColor(ResourcesCompat.getColor(resources, R.color.chip_text, theme))
                     setRippleColorResource(R.color.chip_ripple)
-                    
+
                     // Highlight the current folder
                     if (isLastItem) {
                         setChipBackgroundColorResource(R.color.chip_selected_background)
-                        setTextColor(ResourcesCompat.getColor(resources, R.color.chip_selected_text, theme))
+                        setTextColor(
+                            ResourcesCompat.getColor(
+                                resources,
+                                R.color.chip_selected_text,
+                                theme
+                            )
+                        )
                     }
-                    
+
                     // Navigate to this folder when clicked
                     setOnClickListener {
                         navigateToFolder(item.id)
@@ -497,7 +496,7 @@ class NodeActivity : AppCompatActivity() {
                 chipGroup.addView(chip)
             }
         }
-        
+
         // Scroll to the end to show the current location
         binding.breadcrumbScrollView.post {
             binding.breadcrumbScrollView.fullScroll(HorizontalScrollView.FOCUS_RIGHT)
@@ -506,39 +505,44 @@ class NodeActivity : AppCompatActivity() {
 
     private fun showPathDropdownMenu(view: View, items: List<BreadcrumbItem>) {
         val popup = PopupMenu(this, view)
-        
+
         // Add menu items for each folder in the truncated path
         items.forEachIndexed { index, item ->
             popup.menu.add(Menu.NONE, index, index, item.name)
         }
-        
+
         // Handle menu item clicks
         popup.setOnMenuItemClickListener { menuItem ->
             val selectedItem = items[menuItem.itemId]
             navigateToFolder(selectedItem.id)
             true
         }
-        
+
         popup.show()
     }
 
     private fun navigateToFolder(folderId: String?) {
         // If we're already at this folder, do nothing
         if (folderId == currentNodeId) return
-        
-        // If navigating to root from a subfolder, finish this activity
+
+        // If navigating to root from a subfolder
         if (folderId == null) {
-            // TODO: we need to finish() the whole stack of activities.
-            finish()
-            return
+            // Create a new intent for the root activity
+            val intent = Intent(this, NodeActivity::class.java)
+            // Clear the entire activity stack and start fresh
+            //intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+
+            startActivity(intent)
+        }else{
+            // Otherwise, start a new NodeActivity with the selected folder as parent
+            val intent = Intent(this, NodeActivity::class.java).apply {
+                putExtra(EXTRA_PARENT_ID, folderId)
+            }
+            startActivity(intent)
         }
-        
-        // Otherwise, start a new NodeActivity with the selected folder as parent
-        val intent = Intent(this, NodeActivity::class.java).apply {
-            // TODO: we should MAYBE just finish the activity stack until we reach there. but making a new one might not be that bad, if we can quickly swap between distant folders.
-            putExtra(EXTRA_PARENT_ID, folderId)
-        }
-        startActivity(intent)
+
+        finish()
     }
 
     private fun updateUI(nodes: List<Node>) {
@@ -552,7 +556,7 @@ class NodeActivity : AppCompatActivity() {
             // Get the folder name using the parent ID
             viewModel.getNode(currentNodeId!!) { node ->
                 supportActionBar?.title = node?.name ?: getString(R.string.folder)
-                
+
                 // Update breadcrumb path
                 if (node != null) {
                     breadcrumbManager.navigateToFolder(node.id) { path ->
@@ -577,11 +581,13 @@ class NodeActivity : AppCompatActivity() {
                 finish()
                 true
             }
+
             R.id.action_settings -> {
                 // Launch settings activity
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
