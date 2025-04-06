@@ -28,6 +28,7 @@ import com.lmizuno.smallnotesmanager.models.BreadcrumbItem
 import com.lmizuno.smallnotesmanager.models.Folder
 import com.lmizuno.smallnotesmanager.models.Node
 import com.lmizuno.smallnotesmanager.utils.BreadcrumbManager
+import com.lmizuno.smallnotesmanager.utils.NavigationStackManager
 import com.lmizuno.smallnotesmanager.utils.ThemeManager
 import com.lmizuno.smallnotesmanager.viewmodels.NodeViewModel
 
@@ -37,6 +38,7 @@ class NodeActivity : AppCompatActivity() {
     private var currentNodeId: String? = null
     private lateinit var nodeAdapter: NodeAdapter
     private lateinit var breadcrumbManager: BreadcrumbManager
+    private lateinit var navigationStackManager: NavigationStackManager
 
     private val editorActivityResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -61,12 +63,13 @@ class NodeActivity : AppCompatActivity() {
         binding = ActivityNodeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ThemeManager.getInstance(this).applyTheme()
+        currentNodeId = intent.getStringExtra(EXTRA_PARENT_ID)
 
         // Initialize ViewModel
         viewModel = ViewModelProvider(this)[NodeViewModel::class.java]
         breadcrumbManager = BreadcrumbManager.getInstance(this)
-
-        currentNodeId = intent.getStringExtra(EXTRA_PARENT_ID)
+        navigationStackManager = NavigationStackManager.getInstance(this)
+        navigationStackManager.pushFolder(currentNodeId)
 
         // Set up the back button in the action bar if not at root level
         supportActionBar?.setDisplayHomeAsUpEnabled(currentNodeId != null)
@@ -399,9 +402,6 @@ class NodeActivity : AppCompatActivity() {
 
         // For deep hierarchies, use a truncated view
         if (path.size > 4) {
-            // Add separator after home
-            // TODO: maybe add separator before each folder chip
-
             // Add ellipsis chip for truncated folders
             val ellipsisChip = Chip(this).apply {
                 text = "..."
@@ -417,9 +417,6 @@ class NodeActivity : AppCompatActivity() {
                 }
             }
             chipGroup.addView(ellipsisChip)
-
-            // Add separator after ellipsis
-            // TODO: maybe add separator before each folder chip
 
             // Show only the last 2 folders in the path
             path.takeLast(2).forEachIndexed { index, item ->
@@ -527,18 +524,21 @@ class NodeActivity : AppCompatActivity() {
 
         // If navigating to root from a subfolder
         if (folderId == null) {
+            navigationStackManager.clearStack()
+
             // Create a new intent for the root activity
             val intent = Intent(this, NodeActivity::class.java)
             // Clear the entire activity stack and start fresh
-            //intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-
             startActivity(intent)
         }else{
+            navigationStackManager.truncateToFolder(folderId)
+
             // Otherwise, start a new NodeActivity with the selected folder as parent
             val intent = Intent(this, NodeActivity::class.java).apply {
                 putExtra(EXTRA_PARENT_ID, folderId)
             }
+            intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
         }
 
@@ -577,7 +577,14 @@ class NodeActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                // Handle back button press using the non-deprecated approach
+                navigationStackManager.popFolder()
+
+                // Otherwise, start a new NodeActivity with the selected folder as parent
+                val intent = Intent(this, NodeActivity::class.java).apply {
+                    putExtra(EXTRA_PARENT_ID, navigationStackManager.peekFolder())
+                }
+                intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
                 finish()
                 true
             }
