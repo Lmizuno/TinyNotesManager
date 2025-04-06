@@ -74,6 +74,10 @@ class NodeActivity : AppCompatActivity() {
         // Set up the back button in the action bar if not at root level
         supportActionBar?.setDisplayHomeAsUpEnabled(currentNodeId != null)
 
+        if(currentNodeId == null){
+            binding.breadcrumbScrollView.visibility = View.GONE
+        }
+
         setupRecyclerView()
         setupSpeedDial()
         setupObservers()
