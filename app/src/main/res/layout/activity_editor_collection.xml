@@ -13,7 +13,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/nameLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/TextInputLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -30,7 +30,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/descriptionLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/TextInputLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/primary"
+            android:backgroundTint="?attr/primaryButtonTint"
             android:text="@string/done" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 

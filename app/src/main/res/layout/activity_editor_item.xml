@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".EditorItemActivity">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -40,7 +41,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/titleLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/TextInputLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -51,17 +52,20 @@
                 android:id="@+id/titleInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:singleLine="true" />
+                android:singleLine="true"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/contentLayout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/TextInputLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:hint="@string/content"
-            android:inputType="textMultiLine">
+            android:inputType="textMultiLine"
+            app:boxStrokeColor="?attr/inputHighlight"
+            app:cursorColor="?attr/inputHighlight"
+            app:hintTextColor="?attr/inputHighlight">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/contentInput"

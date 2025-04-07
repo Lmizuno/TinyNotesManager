@@ -29,4 +29,12 @@
     <style name="CustomPreferenceCategoryStyle" parent="Preference.Category">
         <item name="android:textColor">?attr/font</item>
     </style>
+
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">?attr/inputHighlight</item>
+        <item name="textOutlineColor">?attr/inputHighlight</item>
+        <item name="cursorColor">?attr/inputHighlight</item>
+        <item name="hintTextColor">?attr/inputHighlight</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
 </resources> 

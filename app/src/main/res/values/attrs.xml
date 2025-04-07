@@ -5,4 +5,5 @@
     <attr name="iconTint" format="color" />
     <attr name="secondaryFont" format="color"/>
     <attr name="primaryButtonTint" format="color"/>
+    <attr name="inputHighlight" format="color"/>
 </resources>

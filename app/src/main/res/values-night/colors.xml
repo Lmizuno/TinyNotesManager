@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Dark theme colors -->
     <color name="primary">#011015</color>
     <color name="primary_variant">#021E2D</color>
@@ -11,7 +11,7 @@
 
     <!-- FADED -->
     <color name="primary_faded">#042733</color>
-    <color name="primary_variant_faded">#084465</color>
+    <color name="primary_variant_faded">#0A4C71</color>
     <color name="secondary_faded">#B35066</color>
     <color name="secondary_variant_faded">#793237</color>
 
@@ -20,4 +20,6 @@
     <color name="chip_selected_background">@color/secondary_variant_faded</color>
     <color name="chip_selected_text">@color/white</color>
     <color name="chip_ripple">@color/gray</color>
+
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="treu">#042733</color>
 </resources> 
