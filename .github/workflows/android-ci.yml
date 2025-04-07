@@ -7,9 +7,10 @@ on:
       - '!master'
   pull_request:
     branches: [ master ]
-
+    
 jobs:
   lint_and_test:
+    name: Lint and Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,4 +30,36 @@ jobs:
           distribution: ${{ steps.config.outputs.java-distribution }}
           cache: gradle
       
-      # Rest of your workflow...
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      
+      # Run Android Lint
+      - name: Run Android Lint
+        run: ./gradlew lint
+      
+      # Run Detekt (static code analysis)
+      - name: Run Detekt
+        run: |
+          if ! grep -q "id(\"io.gitlab.arturbosch.detekt\")" build.gradle.kts; then
+            echo "Adding Detekt plugin to build.gradle.kts"
+            sed -i '/plugins {/a \    id("io.gitlab.arturbosch.detekt") version "1.23.1"' build.gradle.kts
+          fi
+          ./gradlew detekt
+      
+      # Run unit tests
+      - name: Run Unit Tests
+        run: ./gradlew testDebugUnitTest
+      
+      # Upload reports as artifacts
+      - name: Upload analysis results
+        uses: actions/upload-artifact@v3
+        with:
+          name: quality-reports
+          path: |
+            app/build/reports/lint-results*.html
+            build/reports/detekt/
+            app/build/reports/tests/
+        if: always()
