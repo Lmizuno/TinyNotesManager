@@ -54,4 +54,6 @@
     <string name="choose_presentation_mode">Choose your presentation mode</string>
     <string name="node_type_icon">Item type icon.</string>
     <string name="list_of_items_inside_this_folder">List of items inside this folder.</string>
+    <string name="app_theme">App Theme</string>
+    <string name="theme_options">Choose light, dark, or system default theme</string>
 </resources>

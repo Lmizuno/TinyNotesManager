@@ -8,14 +8,14 @@
             android:entries="@array/theme_entries"
             android:entryValues="@array/theme_values"
             android:key="app_theme"
-            android:summary="Choose light, dark, or system default theme"
-            android:title="App Theme" />
+            android:summary="@string/theme_options"
+            android:title="@string/app_theme" />
             
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="show_descriptions"
-            android:summary="Show item descriptions in lists"
-            android:title="Show Descriptions" />
+<!--        <SwitchPreference-->
+<!--            android:defaultValue="true"-->
+<!--            android:key="show_descriptions"-->
+<!--            android:summary="Show item descriptions in lists"-->
+<!--            android:title="Show Descriptions" />-->
     </PreferenceCategory>
 
     <!-- <PreferenceCategory android:title="General">

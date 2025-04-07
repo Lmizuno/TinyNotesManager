@@ -51,4 +51,6 @@
     <string name="choose_presentation_mode">Escolha o modo</string>
     <string name="node_type_icon">Tipo do ícone do item.</string>
     <string name="list_of_items_inside_this_folder">Lista de itens nessa pasta.</string>
+    <string name="app_theme">Tema do app</string>
+    <string name="theme_options">Escolha tema dia, noite ou dinâmico.</string>
 </resources>
