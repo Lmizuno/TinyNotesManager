@@ -14,8 +14,8 @@ android {
         applicationId = "com.lmizuno.smallnotesmanager"
         minSdk = 28
         targetSdk = 35
-        versionCode = 200
-        versionName = "2.0.0"
+        versionCode = 201
+        versionName = "2.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -47,6 +47,8 @@ android {
 }
 
 dependencies {
+    implementation("com.github.spotbugs:spotbugs-annotations:4.7.3")
+
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     // Developer Defined
