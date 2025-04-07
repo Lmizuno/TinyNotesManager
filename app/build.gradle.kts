@@ -2,6 +2,9 @@ plugins {
     id("com.android.application")
     id("com.google.devtools.ksp")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
+    id("com.google.firebase.firebase-perf")
 }
 
 android {
@@ -11,8 +14,8 @@ android {
         applicationId = "com.lmizuno.smallnotesmanager"
         minSdk = 28
         targetSdk = 35
-        versionCode = 120
-        versionName = "1.2.0"
+        versionCode = 200
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -77,4 +80,16 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.9")
     implementation("com.leinardi.android:speed-dial:3.3.0")
     implementation("androidx.preference:preference-ktx:1.2.1")
+    // Couchbase Lite
+    implementation("com.couchbase.lite:couchbase-lite-android-ktx:3.0.0")
+    
+    // Coroutines for async operations
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-perf")
+
 }

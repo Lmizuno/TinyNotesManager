@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorOnBackground" format="color" />
+    <attr name="colorPrimarySurface" format="color" />
+    <attr name="iconTint" format="color" />
+    <attr name="secondaryFont" format="color"/>
+    <attr name="primaryButtonTint" format="color"/>
+    <attr name="inputHighlight" format="color"/>
+</resources>

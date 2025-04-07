@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Text appearances -->
+    <style name="TextAppearance.SmallNotesManager.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="TextAppearance.SmallNotesManager.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">sans-serif</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:letterSpacing">0.0178571429</item>
+    </style>
+
+    <!-- Component styles -->
+    <style name="Widget.SmallNotesManager.CardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">8dp</item>
+        <item name="cardElevation">2dp</item>
+        <item name="contentPadding">8dp</item>
+    </style>
+
+    <style name="Widget.SmallNotesManager.FloatingActionButton" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="tint">?attr/colorOnPrimary</item>
+        <item name="maxImageSize">24dp</item>
+    </style>
+
+    <style name="CustomPreferenceCategoryStyle" parent="Preference.Category">
+        <item name="android:textColor">?attr/font</item>
+    </style>
+
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">?attr/inputHighlight</item>
+        <item name="textOutlineColor">?attr/inputHighlight</item>
+        <item name="cursorColor">?attr/inputHighlight</item>
+        <item name="hintTextColor">?attr/inputHighlight</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
+</resources> 

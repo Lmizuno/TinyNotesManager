@@ -3,11 +3,11 @@ package com.lmizuno.smallnotesmanager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.lmizuno.smallnotesmanager.Adapters.PresentationAdapter
-import com.lmizuno.smallnotesmanager.DBManager.AppDatabase
-import com.lmizuno.smallnotesmanager.Models.Collection
-import com.lmizuno.smallnotesmanager.Models.Item
-import com.lmizuno.smallnotesmanager.Scripts.DeprecationManager
+import com.lmizuno.smallnotesmanager.adapters.PresentationAdapter
+import com.lmizuno.smallnotesmanager.dbManager.AppDatabase
+import com.lmizuno.smallnotesmanager.models.Collection
+import com.lmizuno.smallnotesmanager.models.Item
+import com.lmizuno.smallnotesmanager.scripts.DeprecationManager
 import io.noties.markwon.Markwon
 import me.relex.circleindicator.CircleIndicator3
 

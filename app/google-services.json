@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "316038653831",
+    "project_id": "tinynotesmanager",
+    "storage_bucket": "tinynotesmanager.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316038653831:android:a2e824e9d200d2ebf99522",
+        "android_client_info": {
+          "package_name": "com.lmizuno.smallnotesmanager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC12dUC47PMGcrnYu-YZ973Y4KlG1r53TM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

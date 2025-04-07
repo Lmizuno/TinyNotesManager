@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:fitsSystemWindows="true">
+    <PreferenceCategory android:title="Application Settings"
+        android:layout="@layout/preferences_category">
+        <ListPreference
+            android:defaultValue="system"
+            android:entries="@array/theme_entries"
+            android:entryValues="@array/theme_values"
+            android:key="app_theme"
+            android:summary="@string/theme_options"
+            android:title="@string/app_theme" />
+            
+<!--        <SwitchPreference-->
+<!--            android:defaultValue="true"-->
+<!--            android:key="show_descriptions"-->
+<!--            android:summary="Show item descriptions in lists"-->
+<!--            android:title="Show Descriptions" />-->
+    </PreferenceCategory>
 
-    <PreferenceCategory android:title="General">
+    <!-- <PreferenceCategory android:title="General">
         <SwitchPreference
             android:defaultValue="false"
             android:key="dark_mode"
             android:summary="@string/theme_mode_toggle"
             android:title="@string/dark_mode" />
 
-    </PreferenceCategory>
+    </PreferenceCategory> -->
 
-    <PreferenceCategory android:title="@string/about">
+    <PreferenceCategory android:title="@string/about" android:layout="@layout/preferences_category">
         <Preference
             android:key="app_version"
             android:summary="1.0.0"

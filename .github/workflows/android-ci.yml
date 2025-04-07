@@ -1,0 +1,54 @@
+name: Android CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  setup:
+    uses: ./.github/workflows/reusable-android-setup.yml
+  
+  lint-and-test:
+    name: Run Lint and Tests
+    needs: setup
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: gradle
+      
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      
+      - name: Run Lint
+        run: ./gradlew lintDebug
+      
+      - name: Run Unit Tests
+        run: ./gradlew testDebugUnitTest
+      
+      - name: Upload Lint Reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: lint-reports
+          path: app/build/reports/lint-results-debug.html
+      
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          path: app/build/reports/tests/testDebugUnitTest/ 

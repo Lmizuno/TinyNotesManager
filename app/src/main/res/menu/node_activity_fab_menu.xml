@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/fab_add_folder"
+        android:title="@string/add_folder"
+         />
+
+    <item
+        android:id="@+id/fab_add_note"
+        android:title="@string/add_note"
+        />
+
+    <item
+        android:id="@+id/fab_delete_folder"
+        android:title="@string/delete_folder"
+        />
+
+    <item
+        android:id="@+id/fab_edit_folder"
+        android:title="@string/edit_folder"
+        />
+
+    <item
+        android:id="@+id/fab_note_pres_mode"
+        android:title="@string/note_pres_mode"
+        />
+
+    <item
+        android:id="@+id/fab_note_deep_pres_mode"
+        android:title="@string/note_deep_pres_mode"
+        />
+</menu>
