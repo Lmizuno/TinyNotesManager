@@ -1,5 +1,0 @@
-java:
-  version: '21'
-  distribution: 'temurin'
-gradle:
-  version: '8.11.1'
