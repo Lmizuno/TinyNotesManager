@@ -41,14 +41,16 @@ jobs:
       
       - name: Upload Lint Reports
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: lint-reports
           path: app/build/reports/lint-results-debug.html
+          compression-level: 9
       
       - name: Upload Test Reports
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-reports
-          path: app/build/reports/tests/testDebugUnitTest/ 
+          path: app/build/reports/tests/testDebugUnitTest/
+          compression-level: 6 
