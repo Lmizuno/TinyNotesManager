@@ -1,0 +1,84 @@
+name: Android CD
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: 'Version name (e.g., 1.2.0)'
+        required: true
+      version_code:
+        description: 'Version code (e.g., 120)'
+        required: true
+
+jobs:
+  setup:
+    uses: ./.github/workflows/reusable-android-setup.yml
+  
+  build-and-release:
+    name: Build and Release APK
+    needs: setup
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: gradle
+      
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+      
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      
+      - name: Update version (manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          sed -i "s/versionCode = [0-9]*/versionCode = ${{ github.event.inputs.version_code }}/g" app/build.gradle.kts
+          sed -i "s/versionName = \"[^\"]*\"/versionName = \"${{ github.event.inputs.version_name }}\"/g" app/build.gradle.kts
+      
+      - name: Build Release APK
+        run: ./gradlew assembleRelease
+      
+      - name: Sign APK
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        with:
+          releaseDirectory: app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
+      
+      - name: Rename signed APK
+        run: |
+          VERSION_NAME=$(grep "versionName" app/build.gradle.kts | sed 's/.*versionName = "\(.*\)".*/\1/')
+          VERSION_CODE=$(grep "versionCode" app/build.gradle.kts | sed 's/.*versionCode = \(.*\)/\1/')
+          mv ${{ steps.sign_app.outputs.signedReleaseFile }} app/build/outputs/apk/release/smallNotesManager-${VERSION_NAME}-${VERSION_CODE}.apk
+      
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-apk
+          path: app/build/outputs/apk/release/smallNotesManager-*.apk
+      
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: app/build/outputs/apk/release/smallNotesManager-*.apk
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

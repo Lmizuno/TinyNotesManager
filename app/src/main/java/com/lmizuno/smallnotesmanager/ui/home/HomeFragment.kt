@@ -1,5 +1,6 @@
 package com.lmizuno.smallnotesmanager.ui.home
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -26,7 +27,8 @@ import com.lmizuno.smallnotesmanager.models.Collection
 import com.lmizuno.smallnotesmanager.scripts.DeprecationManager
 import com.lmizuno.smallnotesmanager.scripts.Sharing
 
-
+// Since this is a legacy code, I won't be maintaining it for now.
+@SuppressLint
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
 
@@ -39,11 +41,13 @@ class HomeFragment : Fragment() {
         setHasOptionsMenu(true)  // Enable options menu
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.home_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_settings -> {
