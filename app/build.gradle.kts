@@ -25,6 +25,13 @@ android {
     }
 
     buildTypes {
+        debug {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
         release {
             isDebuggable = false
             isMinifyEnabled = true
@@ -47,7 +54,8 @@ android {
 }
 
 dependencies {
-    implementation("com.github.spotbugs:spotbugs-annotations:4.7.3")
+//    //Test
+    implementation("com.google.code.findbugs:annotations:3.0.1")
 
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.fragment:fragment-ktx:1.6.2")
@@ -94,4 +102,9 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-perf")
 
+}
+
+configurations.all {
+    exclude(group = "com.google.code.findbugs", module = "jsr305")
+    exclude(group = "net.jcip", module = "jcip-annotations")
 }
