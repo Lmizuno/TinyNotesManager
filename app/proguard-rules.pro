@@ -117,3 +117,24 @@
 -keep public class java.lang.Integer { public <init>(int); }
 -keep public class java.lang.Long    { public <init>(long); }
 -keep public class java.lang.Short   { public <init>(short); }
+
+#-------------------- Application Specific Rules --------------------
+# Keep anonymous inner classes used for TypeToken in specific managers
+# Needed because R8 might strip generic info from these otherwise
+-keep class com.lmizuno.smallnotesmanager.utils.NavigationStackManager$* { *; }
+-keep class com.lmizuno.smallnotesmanager.utils.BreadcrumbManager$* { *; }
+
+#-------------------- Optional Rules (Uncomment if needed) --------------------
+# Keep line numbers for debugging stack traces
+#-keepattributes SourceFile,LineNumberTable
+# Hide original source file name
+#-renamesourcefileattribute SourceFile
+
+# Keep rules for SQLCipher (if using Enterprise Edition or custom SQLCipher)
+# -keep class net.sqlcipher.** { *; }
+# -keep class net.sqlcipher.database.** { *; }
+
+# Keep rules for WebView JavaScript Interface (if used)
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
